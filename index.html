@@ -1,0 +1,3592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ITMSD 1 | Laboratory Exercise 03: React Native Fundamentals — DOrSU</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #00758F;
+      --primary-dark: #005A6E;
+      --primary-light: #E0F2FE;
+      --accent: #F29111;
+      --accent-light: #FEF3C7;
+      --bg: #F8FAFC;
+      --surface: #FFFFFF;
+      --surface-subtle: #F1F5F9;
+      --text: #0F172A;
+      --text-muted: #64748B;
+      --border: #E2E8F0;
+      --code-bg: #0E2A35;
+      --code-text: #E2E8F0;
+      --cyan: #4EC9B0;
+      --green: #10B981;
+      --green-light: #DCFCE7;
+      --red: #EF4444;
+      --red-light: #FEE2E2;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
+      --sidebar-width: 310px;
+    }
+
+    [data-theme="dark"] {
+      --primary: #38BDF8;
+      --primary-dark: #0284C7;
+      --primary-light: #0C4A6E;
+      --accent: #FBBF24;
+      --accent-light: #78350F;
+      --bg: #0B1320;
+      --surface: #131E31;
+      --surface-subtle: #1E293B;
+      --text: #F8FAFC;
+      --text-muted: #94A3B8;
+      --border: #334155;
+      --code-bg: #07131D;
+      --code-text: #F1F5F9;
+      --green-light: #064E3B;
+      --red-light: #7F1D1D;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      transition: background-color 0.25s ease, color 0.25s ease;
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Top Navigation Header */
+    .top-nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 64px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      z-index: 50;
+      backdrop-filter: blur(8px);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: var(--text);
+    }
+
+    .brand-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .brand-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+      display: block;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .theme-toggle {
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
+      background: var(--surface-subtle);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--text);
+      font-size: 16px;
+      transition: all 0.15s ease;
+    }
+    .theme-toggle:hover {
+      background: var(--border);
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: var(--sidebar-width);
+      position: fixed;
+      top: 64px;
+      bottom: 0;
+      left: 0;
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      padding: 16px 14px;
+      overflow-y: auto;
+      z-index: 40;
+    }
+
+    .sidebar-section-title {
+      font-size: 10.5px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--text-muted);
+      margin: 14px 0 6px 8px;
+    }
+
+    .nav-links {
+      list-style: none;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 7px 10px;
+      border-radius: 8px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 12.5px;
+      font-weight: 500;
+      margin-bottom: 2px;
+      transition: all 0.15s ease;
+    }
+
+    .nav-link:hover {
+      background: var(--surface-subtle);
+      color: var(--text);
+    }
+
+    .nav-link.active {
+      background: var(--primary-light);
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    .nav-pill {
+      font-size: 9.5px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: var(--surface-subtle);
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .nav-pill.pill-accent {
+      background: var(--accent-light);
+      color: #B45309;
+    }
+
+    /* Main Content Container */
+    .main-wrapper {
+      margin-left: var(--sidebar-width);
+      margin-top: 64px;
+      padding: 32px 40px;
+      max-width: 1440px;
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1fr 370px;
+      gap: 32px;
+      align-items: start;
+    }
+
+    .content-area {
+      min-width: 0;
+    }
+
+    /* Hero Banner */
+    .hero {
+      background: linear-gradient(135deg, rgba(0, 117, 143, 0.08), rgba(242, 145, 17, 0.08));
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px;
+      margin-bottom: 32px;
+      position: relative;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--primary);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 4px 10px;
+      border-radius: 20px;
+      margin-bottom: 12px;
+    }
+
+    .hero-title {
+      font-size: 25px;
+      font-weight: 800;
+      color: var(--text);
+      line-height: 1.25;
+      margin-bottom: 8px;
+    }
+
+    .hero-sub {
+      font-size: 14.5px;
+      color: var(--text-muted);
+      margin-bottom: 18px;
+    }
+
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      font-size: 12px;
+      color: var(--text-muted);
+      border-top: 1px solid var(--border);
+      padding-top: 14px;
+    }
+
+    .hero-meta-item strong {
+      color: var(--text);
+    }
+
+    /* Section Styles */
+    section {
+      margin-bottom: 48px;
+      scroll-margin-top: 84px;
+    }
+
+    h2.section-title {
+      font-size: 21px;
+      font-weight: 800;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--border);
+    }
+
+    h2.section-title span.badge {
+      font-size: 11.5px;
+      background: var(--primary);
+      color: #fff;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-weight: 700;
+    }
+
+    h3.module-subtitle {
+      font-size: 15.5px;
+      font-weight: 700;
+      margin: 20px 0 10px;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    p, li {
+      font-size: 13.5px;
+      color: var(--text);
+      line-height: 1.65;
+      margin-bottom: 10px;
+    }
+
+    ul, ol {
+      margin-left: 20px;
+      margin-bottom: 16px;
+    }
+
+    /* Code Blocks */
+    .code-container {
+      background: var(--code-bg);
+      border-radius: 12px;
+      margin: 14px 0 20px;
+      overflow: hidden;
+      border: 1px solid #1E3A47;
+      box-shadow: var(--shadow);
+    }
+
+    .code-header {
+      background: rgba(0, 0, 0, 0.35);
+      padding: 8px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .code-lang {
+      font-family: 'Fira Code', monospace;
+      font-size: 11px;
+      color: #94A3B8;
+      font-weight: 600;
+    }
+
+    .btn-copy {
+      background: rgba(255, 255, 255, 0.1);
+      color: #E2E8F0;
+      border: none;
+      padding: 4px 10px;
+      border-radius: 5px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.15s ease;
+    }
+
+    .btn-copy:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .btn-copy.copied {
+      background: #10B981;
+      color: #fff;
+    }
+
+    pre {
+      padding: 16px;
+      overflow-x: auto;
+      font-family: 'Fira Code', monospace;
+      font-size: 12px;
+      line-height: 1.6;
+      color: var(--code-text);
+    }
+
+    /* Syntax Highlighting Colors */
+    .kw { color: #569CD6; font-weight: 600; }
+    .fn { color: #DCDCAA; }
+    .str { color: #CE9178; }
+    .cm { color: #6A9955; font-style: italic; }
+    .prop { color: #9CDCFE; }
+    .tag { color: #4EC9B0; }
+    .type { color: #4EC9B0; font-weight: 600; }
+    .num { color: #B5CEA8; }
+
+    /* Callout Boxes */
+    .callout {
+      border-radius: 10px;
+      padding: 14px 16px;
+      margin: 16px 0;
+      display: flex;
+      gap: 12px;
+      font-size: 13px;
+      border-left: 4px solid;
+    }
+
+    .callout-info {
+      background: rgba(0, 117, 143, 0.08);
+      border-left-color: var(--primary);
+    }
+
+    .callout-warning {
+      background: rgba(242, 145, 17, 0.1);
+      border-left-color: var(--accent);
+    }
+
+    .callout-success {
+      background: rgba(16, 185, 129, 0.1);
+      border-left-color: var(--green);
+    }
+
+    .callout-icon {
+      font-size: 18px;
+      line-height: 1;
+    }
+
+    /* Checklist */
+    .checklist {
+      list-style: none;
+      margin-left: 0;
+    }
+
+    .checklist-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 8px 12px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-bottom: 8px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      font-size: 13px;
+    }
+
+    .checklist-item:hover {
+      background: var(--surface-subtle);
+    }
+
+    .checklist-item input[type="checkbox"] {
+      margin-top: 3px;
+      cursor: pointer;
+      accent-color: var(--primary);
+      width: 15px;
+      height: 15px;
+    }
+
+    .checklist-item.done span {
+      text-decoration: line-through;
+      color: var(--text-muted);
+    }
+
+    /* Tabbed Container */
+    .tab-container {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      margin: 18px 0;
+      background: var(--surface);
+    }
+
+    .tab-nav {
+      display: flex;
+      flex-wrap: wrap;
+      background: var(--surface-subtle);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .tab-btn {
+      padding: 10px 16px;
+      font-size: 12.5px;
+      font-weight: 600;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      color: var(--text-muted);
+      border-bottom: 2px solid transparent;
+      transition: all 0.15s ease;
+    }
+
+    .tab-btn:hover {
+      color: var(--text);
+    }
+
+    .tab-btn.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+      background: var(--surface);
+    }
+
+    .tab-pane {
+      padding: 20px;
+      display: none;
+    }
+
+    .tab-pane.active {
+      display: block;
+    }
+
+    /* Comparison Grid */
+    .compare-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+      margin: 14px 0;
+    }
+
+    .compare-card {
+      background: var(--surface-subtle);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .compare-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .compare-badge {
+      font-size: 10.5px;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .badge-java { background: #FEF3C7; color: #B45309; }
+    .badge-web { background: #DBEAFE; color: #1D4ED8; }
+    .badge-rn { background: #DCFCE7; color: #15803D; }
+
+    .compare-title {
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .compare-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+      line-height: 1.5;
+    }
+
+    .takeaway-box {
+      background: rgba(0, 117, 143, 0.06);
+      border: 1px dashed var(--primary);
+      border-radius: 10px;
+      padding: 12px 14px;
+      margin-top: 14px;
+      font-size: 12.5px;
+    }
+
+    .takeaway-box strong {
+      color: var(--primary);
+    }
+
+    /* Interactive File Explorer */
+    .explorer-wrapper {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      margin: 18px 0 24px;
+      background: var(--surface);
+      box-shadow: var(--shadow);
+    }
+
+    .explorer-tree {
+      background: var(--surface-subtle);
+      border-right: 1px solid var(--border);
+      padding: 14px 10px;
+      overflow-y: auto;
+      max-height: 520px;
+    }
+
+    .explorer-tree-title {
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      padding: 4px 8px 10px;
+    }
+
+    .tree-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 10px;
+      border-radius: 6px;
+      font-family: 'Fira Code', monospace;
+      font-size: 12px;
+      color: var(--text);
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.1s ease;
+      margin-bottom: 2px;
+    }
+
+    .tree-item:hover {
+      background: rgba(0, 117, 143, 0.08);
+      color: var(--primary);
+    }
+
+    .tree-item.active {
+      background: var(--primary);
+      color: #FFFFFF;
+      font-weight: 600;
+    }
+
+    .explorer-detail {
+      padding: 20px 24px;
+      overflow-y: auto;
+      max-height: 520px;
+    }
+
+    .detail-badge-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .detail-file-type {
+      font-size: 10.5px;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 4px;
+      background: var(--primary-light);
+      color: var(--primary);
+      text-transform: uppercase;
+    }
+
+    .detail-file-path {
+      font-family: 'Fira Code', monospace;
+      font-size: 11.5px;
+      color: var(--text-muted);
+    }
+
+    .detail-title {
+      font-size: 17px;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+
+    .detail-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+      line-height: 1.55;
+    }
+
+    .detail-card-section-title {
+      font-size: 11.5px;
+      font-weight: 800;
+      color: var(--primary);
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      margin-bottom: 6px;
+    }
+
+    /* CLI Bootstrap Helper */
+    .cli-generator-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      margin: 16px 0 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .cli-config-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .cli-label {
+      display: block;
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+
+    .cli-pills {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .cli-pill {
+      background: var(--surface-subtle);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 5px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .cli-pill:hover {
+      background: var(--border);
+      color: var(--text);
+    }
+
+    .cli-pill.active {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+
+    .cli-input {
+      width: 100%;
+      background: var(--surface-subtle);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-family: 'Fira Code', monospace;
+      font-size: 12.5px;
+      outline: none;
+    }
+
+    .cli-input:focus {
+      border-color: var(--primary);
+    }
+
+    /* Interactive Flexbox Visualizer */
+    .flex-visualizer-container {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      margin: 20px 0 28px;
+      background: var(--surface);
+      box-shadow: var(--shadow);
+    }
+
+    .flex-controls-panel {
+      padding: 20px;
+      background: var(--surface-subtle);
+      border-bottom: 1px solid var(--border);
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 16px;
+    }
+
+    .flex-control-group label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+
+    .flex-control-group .val-badge {
+      font-family: 'Fira Code', monospace;
+      font-size: 11px;
+      background: var(--primary-light);
+      color: var(--primary);
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    .pill-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+
+    .pill-btn {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 11.5px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .pill-btn:hover {
+      border-color: var(--primary);
+      color: var(--text);
+    }
+
+    .pill-btn.active {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+
+    .flex-stage-wrapper {
+      padding: 24px;
+      background: var(--surface);
+    }
+
+    .flex-axis-indicator {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--primary);
+      background: var(--primary-light);
+      padding: 6px 12px;
+      border-radius: 6px;
+      margin-bottom: 14px;
+      text-align: center;
+      border: 1px dashed var(--primary);
+    }
+
+    .flex-preview-stage {
+      min-height: 240px;
+      background: rgba(0, 117, 143, 0.03);
+      border: 2px dashed var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      display: flex;
+      transition: all 0.25s ease;
+    }
+
+    .flex-item {
+      padding: 14px;
+      border-radius: 8px;
+      color: #fff;
+      font-weight: 700;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      min-width: 90px;
+      min-height: 50px;
+    }
+
+    .item-1 { background: #00758F; }
+    .item-2 { background: #F29111; }
+    .item-3 { background: #10B981; }
+
+    .item-title { font-size: 12px; font-weight: 800; }
+    .item-sub { font-size: 10px; opacity: 0.9; font-weight: 500; }
+
+    .flex-presets {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+      grid-column: 1 / -1;
+      padding-top: 10px;
+      border-top: 1px solid var(--border);
+    }
+
+    .preset-btn {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .preset-btn:hover {
+      background: var(--primary-light);
+      color: var(--primary);
+      border-color: var(--primary);
+    }
+
+    /* Gamified Knowledge Quizzes */
+    .quiz-score-banner {
+      background: linear-gradient(135deg, var(--surface), var(--surface-subtle));
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px 20px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .quiz-score-title {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--text);
+      display: block;
+    }
+
+    .quiz-score-text {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .quiz-score-badge {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--primary);
+      background: var(--primary-light);
+      padding: 6px 14px;
+      border-radius: 30px;
+      white-space: nowrap;
+    }
+
+    .quiz-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px 20px;
+      margin-bottom: 16px;
+      transition: all 0.2s ease;
+    }
+
+    .quiz-q-num {
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: var(--primary);
+      letter-spacing: 0.6px;
+      margin-bottom: 4px;
+    }
+
+    .quiz-question {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 14px;
+    }
+
+    .quiz-options {
+      display: grid;
+      gap: 8px;
+    }
+
+    .quiz-opt {
+      background: var(--surface-subtle);
+      border: 1px solid var(--border);
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      color: var(--text);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      text-align: left;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .quiz-opt:hover:not(.disabled) {
+      border-color: var(--primary);
+      background: var(--surface);
+    }
+
+    .quiz-opt.correct {
+      background: var(--green-light);
+      border-color: var(--green);
+      color: #065F46;
+      font-weight: 700;
+    }
+
+    .quiz-opt.incorrect {
+      background: var(--red-light);
+      border-color: var(--red);
+      color: #991B1B;
+    }
+
+    .quiz-feedback {
+      margin-top: 10px;
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 12px;
+      line-height: 1.5;
+      display: none;
+    }
+
+    .quiz-feedback.show-correct {
+      display: block;
+      background: var(--green-light);
+      border: 1px solid var(--green);
+      color: #065F46;
+    }
+
+    .quiz-feedback.show-wrong {
+      display: block;
+      background: var(--red-light);
+      border: 1px solid var(--red);
+      color: #991B1B;
+    }
+
+    /* Pre-Submission Code Validator */
+    .validator-wrapper {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 22px;
+      margin: 18px 0 28px;
+      box-shadow: var(--shadow);
+    }
+
+    .validator-input-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .validator-tabs {
+      display: flex;
+      gap: 6px;
+    }
+
+    .v-tab {
+      background: var(--surface-subtle);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .v-tab.active {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+
+    .btn-sample-code {
+      background: var(--accent-light);
+      color: #92400E;
+      border: 1px solid #FCD34D;
+      padding: 5px 12px;
+      border-radius: 6px;
+      font-size: 11.5px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .btn-sample-code:hover {
+      background: #FDE68A;
+    }
+
+    .validator-textarea {
+      width: 100%;
+      height: 220px;
+      background: var(--code-bg);
+      color: var(--code-text);
+      font-family: 'Fira Code', monospace;
+      font-size: 12px;
+      padding: 14px;
+      border-radius: 10px;
+      border: 1px solid #1E3A47;
+      resize: vertical;
+      outline: none;
+      line-height: 1.55;
+    }
+
+    .validator-textarea:focus {
+      border-color: var(--primary);
+    }
+
+    .validator-actions {
+      display: flex;
+      gap: 10px;
+      margin: 14px 0;
+    }
+
+    .btn-validate {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-validate:hover {
+      background: var(--primary-dark);
+      transform: translateY(-1px);
+    }
+
+    .btn-clear {
+      background: var(--surface-subtle);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .validator-results-box {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--surface-subtle);
+      padding: 16px;
+    }
+
+    .validator-empty-state {
+      text-align: center;
+      font-size: 13px;
+      color: var(--text-muted);
+      padding: 20px;
+    }
+
+    .audit-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .audit-score-pill {
+      font-size: 15px;
+      font-weight: 800;
+      padding: 4px 12px;
+      border-radius: 20px;
+    }
+
+    .audit-pass { background: var(--green-light); color: #065F46; }
+    .audit-warn { background: var(--accent-light); color: #92400E; }
+    .audit-fail { background: var(--red-light); color: #991B1B; }
+
+    .audit-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 8px 10px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      margin-bottom: 6px;
+      font-size: 12.5px;
+    }
+
+    .audit-icon { font-size: 14px; line-height: 1; margin-top: 2px; }
+
+    /* FEATURE: Deliverables Cards */
+    .deliverable-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+      margin: 18px 0 24px;
+    }
+
+    .deliverable-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: var(--shadow);
+      border-top: 4px solid var(--primary);
+      transition: all 0.15s ease;
+    }
+
+    .deliverable-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .deliv-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .deliv-icon-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .deliv-icon {
+      font-size: 20px;
+    }
+
+    .deliv-title {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    .deliv-badge {
+      font-size: 10px;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 4px;
+      background: var(--primary-light);
+      color: var(--primary);
+      text-transform: uppercase;
+    }
+
+    .deliv-desc {
+      font-size: 12.5px;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      line-height: 1.5;
+    }
+
+    .deliv-specs {
+      background: var(--surface-subtle);
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: 12px;
+      margin-top: auto;
+    }
+
+    .deliv-specs li {
+      font-size: 12px;
+      margin-bottom: 4px;
+    }
+
+    /* Tables */
+    .data-table-container {
+      overflow-x: auto;
+      margin: 16px 0 24px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+    }
+
+    table.data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12.5px;
+      text-align: left;
+    }
+
+    table.data-table th {
+      background: var(--primary);
+      color: #fff;
+      font-weight: 700;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+    }
+
+    table.data-table td {
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+    }
+
+    table.data-table tr:nth-child(even) td {
+      background: var(--surface-subtle);
+    }
+
+    /* Sticky Phone Simulator */
+    .phone-simulator-sticky {
+      position: sticky;
+      top: 84px;
+      width: 100%;
+    }
+
+    .phone-wrapper {
+      background: #0F172A;
+      border-radius: 40px;
+      padding: 12px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.1);
+      border: 4px solid #334155;
+      width: 100%;
+      max-width: 360px;
+      margin: 0 auto;
+    }
+
+    .phone-notch {
+      width: 110px;
+      height: 18px;
+      background: #000;
+      border-radius: 0 0 12px 12px;
+      margin: 0 auto 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .phone-camera {
+      width: 8px;
+      height: 8px;
+      background: #1E293B;
+      border-radius: 50%;
+    }
+
+    .phone-screen {
+      background: #F1F5F9;
+      border-radius: 28px;
+      padding: 14px;
+      color: #0F172A;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      min-height: 520px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .sim-header {
+      background: #00758F;
+      color: #fff;
+      padding: 12px 10px;
+      border-radius: 12px;
+      text-align: center;
+      margin-bottom: 12px;
+      border-bottom: 3px solid #F29111;
+    }
+
+    .sim-header h4 { font-size: 10.5px; font-weight: 800; letter-spacing: 0.6px; }
+    .sim-header p { font-size: 8px; font-weight: 600; opacity: 0.9; margin: 2px 0; color: #fff; }
+    .sim-header span { font-size: 7.5px; background: rgba(0,0,0,0.2); padding: 2px 6px; border-radius: 4px; display: inline-block; }
+
+    .sim-card {
+      background: #FFFFFF;
+      border-radius: 14px;
+      padding: 12px;
+      border: 1px solid #E2E8F0;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+      margin-bottom: 10px;
+    }
+
+    .sim-card-top {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .sim-avatar {
+      width: 54px;
+      height: 54px;
+      border-radius: 27px;
+      border: 2px solid #00758F;
+      object-fit: cover;
+    }
+
+    .sim-info h5 { font-size: 11px; font-weight: 800; color: #0F172A; line-height: 1.2; margin-bottom: 2px; }
+    .sim-info .sim-id { font-family: 'Fira Code', monospace; font-size: 9.5px; font-weight: 700; color: #00758F; }
+    .sim-info .sim-course { font-size: 9px; color: #475569; font-weight: 600; }
+    .sim-info .sim-yr { font-size: 8.5px; color: #64748B; }
+
+    .sim-badge {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 5px;
+      border-radius: 6px;
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      margin: 8px 0;
+    }
+
+    .sim-badge.active { background: #DCFCE7; color: #166534; border: 1px solid #86EFAC; }
+    .sim-badge.suspended { background: #FEE2E2; color: #991B1B; border: 1px solid #FCA5A5; }
+
+    .sim-dot { width: 6px; height: 6px; border-radius: 50%; }
+    .sim-badge.active .sim-dot { background: #16A34A; }
+    .sim-badge.suspended .sim-dot { background: #DC2626; }
+
+    .sim-campus { font-size: 8px; color: #64748B; text-align: center; }
+
+    .sim-controls {
+      background: #FFFFFF;
+      border-radius: 12px;
+      padding: 12px;
+      border: 1px solid #E2E8F0;
+    }
+
+    .sim-controls-title {
+      font-size: 10px;
+      font-weight: 800;
+      color: #0F172A;
+      margin-bottom: 8px;
+    }
+
+    .sim-counter-box {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      border-radius: 8px;
+      padding: 6px 10px;
+      margin-bottom: 8px;
+    }
+
+    .sim-counter-box label { font-size: 9.5px; color: #475569; font-weight: 600; }
+    .sim-counter-val { font-size: 17px; font-weight: 800; color: #00758F; }
+
+    .sim-btn-row {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+
+    .sim-btn {
+      flex: 1;
+      border: none;
+      padding: 7px 4px;
+      border-radius: 6px;
+      font-size: 9.5px;
+      font-weight: 700;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.1s ease;
+    }
+
+    .sim-btn:active { transform: scale(0.96); }
+
+    .sim-btn-primary { background: #00758F; color: #fff; }
+    .sim-btn-secondary { background: #E2E8F0; color: #334155; }
+
+    .sim-btn-toggle {
+      width: 100%;
+      border-radius: 6px;
+      padding: 7px;
+      font-size: 9px;
+      font-weight: 800;
+      border: 1px solid;
+      cursor: pointer;
+      text-align: center;
+      margin-bottom: 6px;
+    }
+
+    .sim-btn-toggle.suspend-btn {
+      background: #FEE2E2;
+      border-color: #FCA5A5;
+      color: #991B1B;
+    }
+
+    .sim-btn-toggle.activate-btn {
+      background: #DCFCE7;
+      border-color: #86EFAC;
+      color: #166534;
+    }
+
+    .sim-btn-peer {
+      width: 100%;
+      background: #F8FAFC;
+      border: 1px solid #CBD5E1;
+      color: #00758F;
+      font-size: 8.5px;
+      font-weight: 700;
+      padding: 6px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .phone-simulator-label {
+      text-align: center;
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 10px;
+      font-weight: 600;
+    }
+
+    /* Video & Resource Cards */
+    .resource-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 14px;
+      margin: 16px 0;
+    }
+
+    .resource-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px;
+      transition: all 0.15s ease;
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .resource-card:hover {
+      border-color: var(--primary);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow);
+    }
+
+    .resource-tag {
+      font-size: 9.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--primary);
+      margin-bottom: 4px;
+    }
+
+    .resource-title {
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 4px;
+      color: var(--text);
+    }
+
+    .resource-desc {
+      font-size: 11.5px;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+      flex-grow: 1;
+    }
+
+    .resource-link-text {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    @media print {
+      .top-nav, .sidebar, .phone-simulator-sticky, .nav-actions, .btn-copy, .theme-toggle, .btn-validate, .btn-clear, .btn-sample-code {
+        display: none !important;
+      }
+      .main-wrapper {
+        margin: 0 !important;
+        padding: 0 !important;
+        grid-template-columns: 1fr !important;
+      }
+      body {
+        background: #fff !important;
+        color: #000 !important;
+      }
+      .code-container {
+        border: 1px solid #ccc !important;
+        background: #f8f9fa !important;
+      }
+      pre {
+        color: #000 !important;
+      }
+    }
+
+    @media (max-width: 1024px) {
+      .main-wrapper {
+        grid-template-columns: 1fr;
+        padding: 24px;
+      }
+      .phone-simulator-sticky {
+        position: static;
+        max-width: 360px;
+        margin: 20px auto 40px;
+      }
+      .explorer-wrapper {
+        grid-template-columns: 1fr;
+      }
+      .explorer-tree {
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        display: none;
+      }
+      .main-wrapper {
+        margin-left: 0;
+        padding: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navigation -->
+  <header class="top-nav">
+    <a href="#" class="brand">
+      <div>
+        <div class="brand-title">ITMSD 1 — Laboratory Exercise 03</div>
+        <span class="brand-sub">Fundamentals of Mobile Design and Tools</span>
+      </div>
+    </a>
+    <div class="nav-actions">
+      <button class="theme-toggle" id="themeToggle" title="Toggle Light/Dark Theme">
+        🌓
+      </button>
+    </div>
+  </header>
+
+  <!-- Left Sidebar Navigation -->
+  <aside class="sidebar">
+    <div class="sidebar-section-title">Getting Started</div>
+    <ul class="nav-links">
+      <li><a href="#overview" class="nav-link active"><span>1. Overview & Objectives</span></a></li>
+      <li><a href="#prereqs" class="nav-link"><span>2. Setup & Prerequisites</span></a></li>
+      <li><a href="#comparison" class="nav-link"><span>3. Java & Web Bridge</span> <span class="nav-pill">Must Read</span></a></li>
+      <li><a href="#structure" class="nav-link"><span>4. Project & Config Explorer</span> <span class="nav-pill">Interactive</span></a></li>
+    </ul>
+
+    <div class="sidebar-section-title">Laboratory Modules</div>
+    <ul class="nav-links">
+      <li><a href="#module-1" class="nav-link"><span>Module 1: Expo & CLI Helper</span> <span class="nav-pill pill-accent">Tool</span></a></li>
+      <li><a href="#module-2" class="nav-link"><span>Module 2: Core Primitives</span> <span class="nav-pill">JSX</span></a></li>
+      <li><a href="#module-3" class="nav-link"><span>Module 3: Modular Props</span> <span class="nav-pill">Types</span></a></li>
+      <li><a href="#module-4" class="nav-link"><span>Module 4: Dynamic State</span> <span class="nav-pill">Hook</span></a></li>
+      <li><a href="#module-5" class="nav-link"><span>Module 5: Flexbox Visualizer</span> <span class="nav-pill pill-accent">Visualizer</span></a></li>
+      <li><a href="#module-6" class="nav-link"><span>Module 6: Synthesis App</span> <span class="nav-pill">Final</span></a></li>
+    </ul>
+
+    <div class="sidebar-section-title">Assessment & Deliverables</div>
+    <ul class="nav-links">
+      <li><a href="#quiz" class="nav-link"><span>Knowledge Check Quiz</span> <span class="nav-pill pill-accent">Gamified</span></a></li>
+      <li><a href="#validator" class="nav-link"><span>Pre-Submission Validator</span> <span class="nav-pill pill-accent">Auto-Check</span></a></li>
+      <li><a href="#rubric" class="nav-link"><span>Grading Rubric</span> <span class="nav-pill">100 Pts</span></a></li>
+      <li><a href="#deliverables" class="nav-link"><span>Laboratory Deliverables</span> <span class="nav-pill pill-accent">Submit</span></a></li>
+      <li><a href="#cheatsheet" class="nav-link"><span>Quick Cheat Sheet</span></a></li>
+      <li><a href="#tutorials" class="nav-link"><span>References & Tutorials</span></a></li>
+    </ul>
+  </aside>
+
+  <!-- Main Content Wrapper -->
+  <main class="main-wrapper">
+    <div class="content-area">
+
+      <!-- 1. Overview & Objectives -->
+      <section id="overview">
+        <div class="hero">
+          <div class="hero-badge">Academic Year 2026–2027 • 2nd Semester</div>
+          <h1 class="hero-title">Laboratory Exercise 03: React Native Fundamentals</h1>
+          <p class="hero-sub">Step-by-step guided laboratory exercise constructing the <strong>DOrSU Digital Campus Pass</strong> using Components, Props, State Management, and Flexbox Styling.</p>
+          <div class="hero-meta">
+            <div class="hero-meta-item">Course: <strong>ITMSD 1 — Fundamentals of Mobile Design and Tools</strong></div>
+            <div class="hero-meta-item">Total Score: <strong>100 Points</strong></div>
+            <div class="hero-meta-item">Toolchain: <strong>Expo SDK 57 • React 19 • TypeScript</strong></div>
+          </div>
+        </div>
+
+        <h2 class="section-title">1. Learning Objectives <span class="badge">CLO2 Aligned</span></h2>
+        <p>By completing this laboratory activity, students will demonstrate the ability to:</p>
+        <ul class="checklist" id="objList">
+          <li class="checklist-item" onclick="toggleCheck(this)"><input type="checkbox"> <span>Scaffold and run a modern React Native app using Expo CLI with TypeScript.</span></li>
+          <li class="checklist-item" onclick="toggleCheck(this)"><input type="checkbox"> <span>Bridge previous knowledge of Java (Android) and Web (HTML/CSS) to React Native concepts.</span></li>
+          <li class="checklist-item" onclick="toggleCheck(this)"><input type="checkbox"> <span>Navigate and configure the project directory structure (<code>app.json</code>, <code>package.json</code>, <code>tsconfig.json</code>).</span></li>
+          <li class="checklist-item" onclick="toggleCheck(this)"><input type="checkbox"> <span>Contrast native UI primitives (<code>View</code>, <code>Text</code>, <code>Image</code>, <code>Pressable</code>) with HTML elements.</span></li>
+          <li class="checklist-item" onclick="toggleCheck(this)"><input type="checkbox"> <span>Establish strict unidirectional data flow using TypeScript-typed <code>props</code>.</span></li>
+          <li class="checklist-item" onclick="toggleCheck(this)"><input type="checkbox"> <span>Manage dynamic screen state and reactive UI updates with the <code>useState</code> hook.</span></li>
+          <li class="checklist-item" onclick="toggleCheck(this)"><input type="checkbox"> <span>Construct responsive cross-platform layouts using <code>StyleSheet.create()</code> and Flexbox.</span></li>
+          <li class="checklist-item" onclick="toggleCheck(this)"><input type="checkbox"> <span>Assemble and test the full <strong>DOrSU Digital Campus Pass</strong> mobile application.</span></li>
+        </ul>
+      </section>
+
+      <!-- 2. Prerequisites -->
+      <section id="prereqs">
+        <h2 class="section-title">2. Environment Prerequisites</h2>
+        <div class="callout callout-info">
+          <div class="callout-icon">💡</div>
+          <div>
+            <strong>Prerequisites Check:</strong> Ensure your computer has <strong>Node.js LTS (v18+)</strong> and <strong>VS Code</strong>. Install <strong>Expo Go</strong> on your Android/iOS phone or configure an Android Studio Emulator.
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. Conceptual Bridge (Java & Web vs React Native) -->
+      <section id="comparison">
+        <h2 class="section-title">3. Conceptual Bridge: Java Android & Web HTML/CSS vs React Native</h2>
+        <p>If you already know <strong>Java (Android Studio)</strong> and <strong>Web Development (HTML/CSS/JS)</strong>, React Native is simply a modern convergence of both! Explore the interactive tabs below to map your existing skills:</p>
+
+        <div class="tab-container">
+          <div class="tab-nav">
+            <button class="tab-btn active" onclick="switchTab(this, 'comp-ui')">📱 1. UI Primitives & Tags</button>
+            <button class="tab-btn" onclick="switchTab(this, 'comp-style')">🎨 2. Styling & Layout Engines</button>
+            <button class="tab-btn" onclick="switchTab(this, 'comp-state')">⚡ 3. State & Reactivity</button>
+            <button class="tab-btn" onclick="switchTab(this, 'comp-props')">🧩 4. Props vs Java Constructors</button>
+          </div>
+
+          <!-- Tab 1: UI Primitives -->
+          <div class="tab-pane active" id="comp-ui">
+            <p>How visual elements translate from Android Java XML, Web HTML, and React Native JSX:</p>
+            <div class="compare-grid">
+              <div class="compare-card">
+                <div class="compare-header">
+                  <span class="compare-title">Java (Android XML)</span>
+                  <span class="compare-badge badge-java">Android</span>
+                </div>
+                <div class="compare-desc">Uses native Android View XML tags compiled into Android bytecode:</div>
+                <div class="code-container">
+                  <pre><code>&lt;<span class="tag">LinearLayout</span>
+  <span class="prop">android:orientation</span>=<span class="str">"vertical"</span>&gt;
+  &lt;<span class="tag">TextView</span> <span class="prop">android:text</span>=<span class="str">"Hello"</span> /&gt;
+  &lt;<span class="tag">ImageView</span> <span class="prop">android:src</span>=<span class="str">"..."</span> /&gt;
+  &lt;<span class="tag">Button</span> <span class="prop">android:text</span>=<span class="str">"Tap"</span> /&gt;
+&lt;/<span class="tag">LinearLayout</span>&gt;</code></pre>
+                </div>
+              </div>
+
+              <div class="compare-card">
+                <div class="compare-header">
+                  <span class="compare-title">Web (HTML5)</span>
+                  <span class="compare-badge badge-web">Browser DOM</span>
+                </div>
+                <div class="compare-desc">Uses browser DOM elements rendered inside a web browser engine:</div>
+                <div class="code-container">
+                  <pre><code>&lt;<span class="tag">div</span> <span class="prop">class</span>=<span class="str">"container"</span>&gt;
+  &lt;<span class="tag">p</span>&gt;Hello&lt;/<span class="tag">p</span>&gt;
+  &lt;<span class="tag">img</span> <span class="prop">src</span>=<span class="str">"..."</span> /&gt;
+  &lt;<span class="tag">button</span>&gt;Tap&lt;/<span class="tag">button</span>&gt;
+&lt;/<span class="tag">div</span>&gt;</code></pre>
+                </div>
+              </div>
+
+              <div class="compare-card">
+                <div class="compare-header">
+                  <span class="compare-title">React Native (TypeScript)</span>
+                  <span class="compare-badge badge-rn">Cross-Platform</span>
+                </div>
+                <div class="compare-desc">Uses cross-platform JSX primitives that map to REAL native UI:</div>
+                <div class="code-container">
+                  <pre><code>&lt;<span class="tag">View</span> <span class="prop">style</span>={styles.container}&gt;
+  &lt;<span class="tag">Text</span>&gt;Hello&lt;/<span class="tag">Text</span>&gt;
+  &lt;<span class="tag">Image</span> <span class="prop">source</span>={{ uri: ... }} /&gt;
+  &lt;<span class="tag">Pressable</span>&gt;
+    &lt;<span class="tag">Text</span>&gt;Tap&lt;/<span class="tag">Text</span>&gt;
+  &lt;/<span class="tag">Pressable</span>&gt;
+&lt;/<span class="tag">View</span>&gt;</code></pre>
+                </div>
+              </div>
+            </div>
+
+            <div class="takeaway-box">
+              <strong>💡 Key Takeaway:</strong> In React Native, <code>&lt;View&gt;</code> compiles to an actual <code>android.view.ViewGroup</code> on Android and <code>UIView</code> on iOS! It is <em>not</em> a web browser wrapper.
+            </div>
+          </div>
+
+          <!-- Tab 2: Styling -->
+          <div class="tab-pane" id="comp-style">
+            <p>Comparing layout attributes, density pixels, and default directions:</p>
+            <div class="compare-grid">
+              <div class="compare-card">
+                <div class="compare-header">
+                  <span class="compare-title">Java Android XML</span>
+                  <span class="compare-badge badge-java">Android</span>
+                </div>
+                <div class="compare-desc">Attributes in XML; density-independent pixels (<code>dp</code>):</div>
+                <div class="code-container">
+                  <pre><code>android:layout_width="match_parent"
+android:orientation="vertical"
+android:padding="16dp"
+android:background="#FFFFFF"</code></pre>
+                </div>
+              </div>
+
+              <div class="compare-card">
+                <div class="compare-header">
+                  <span class="compare-title">Web CSS</span>
+                  <span class="compare-badge badge-web">Web</span>
+                </div>
+                <div class="compare-desc">CSS stylesheets; defaults to row direction; unit strings:</div>
+                <div class="code-container">
+                  <pre><code>.container {
+  display: flex;
+  flex-direction: row; /* DEFAULT! */
+  padding: 16px;
+  background-color: #FFFFFF;
+}</code></pre>
+                </div>
+              </div>
+
+              <div class="compare-card">
+                <div class="compare-header">
+                  <span class="compare-title">React Native StyleSheet</span>
+                  <span class="compare-badge badge-rn">React Native</span>
+                </div>
+                <div class="compare-desc">JavaScript objects; defaults to column; unitless DP numbers:</div>
+                <div class="code-container">
+                  <pre><code>const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    flexDirection: 'column', /* DEFAULT! */
+    padding: 16, /* Unitless DP */
+    backgroundColor: '#FFFFFF',
+  }
+});</code></pre>
+                </div>
+              </div>
+            </div>
+
+            <div class="takeaway-box">
+              <strong>⚠️ The #1 Pitfall for Web Developers:</strong> In Web CSS, <code>flex-direction</code> defaults to <code>row</code> (horizontal). In React Native, it defaults to <code>column</code> (vertical), which perfectly matches Android's <code>LinearLayout orientation="vertical"</code>!
+            </div>
+          </div>
+
+          <!-- Tab 3: State -->
+          <div class="tab-pane" id="comp-state">
+            <p>Imperative DOM/View Mutation vs. Declarative Reactive State:</p>
+            <div class="compare-grid">
+              <div class="compare-card">
+                <div class="compare-header">
+                  <span class="compare-title">Java (Imperative)</span>
+                  <span class="compare-badge badge-java">Java Android</span>
+                </div>
+                <div class="compare-desc">You manually find the view and tell the OS <strong>HOW</strong> to update:</div>
+                <div class="code-container">
+                  <pre><code>TextView tv = findViewById(R.id.counter);
+Button btn = findViewById(R.id.btnScan);
+int count = 0;
+
+btn.setOnClickListener(v -> {
+    count++;
+    tv.setText(String.valueOf(count));
+});</code></pre>
+                </div>
+              </div>
+
+              <div class="compare-card">
+                <div class="compare-header">
+                  <span class="compare-title">React Native (Declarative)</span>
+                  <span class="compare-badge badge-rn">React Native</span>
+                </div>
+                <div class="compare-desc">You declare <strong>WHAT</strong> the screen looks like; React updates it automatically:</div>
+                <div class="code-container">
+                  <pre><code>const [count, setCount] = useState(0);
+
+return (
+  &lt;View&gt;
+    &lt;Text&gt;{count}&lt;/Text&gt;
+    &lt;Pressable onPress={() => setCount(c => c + 1)}&gt;
+      &lt;Text&gt;+1 Scan&lt;/Text&gt;
+    &lt;/Pressable&gt;
+  &lt;/View&gt;
+);</code></pre>
+                </div>
+              </div>
+            </div>
+
+            <div class="takeaway-box">
+              <strong>💡 Key Takeaway:</strong> In Java, you mutate UI elements directly via setters (<code>tv.setText()</code>). In React Native, you update the state variable (<code>setCount</code>), and React's virtual engine automatically re-renders the exact text node!
+            </div>
+          </div>
+
+          <!-- Tab 4: Props -->
+          <div class="tab-pane" id="comp-props">
+            <p>Passing Parameters to Reusable UI Components:</p>
+            <div class="compare-grid">
+              <div class="compare-card">
+                <div class="compare-header">
+                  <span class="compare-title">Java Class Constructors / Setters</span>
+                  <span class="compare-badge badge-java">Java OOP</span>
+                </div>
+                <div class="compare-desc">Data passed into class constructor or public setters:</div>
+                <div class="code-container">
+                  <pre><code>StudentCard card1 = new StudentCard(
+    "Juan Dela Cruz", 
+    "2024-008492-MT"
+);
+containerLayout.addView(card1);</code></pre>
+                </div>
+              </div>
+
+              <div class="compare-card">
+                <div class="compare-header">
+                  <span class="compare-title">React Native Props (JSX Attributes)</span>
+                  <span class="compare-badge badge-rn">React Native</span>
+                </div>
+                <div class="compare-desc">Data passed as typed attributes in JSX:</div>
+                <div class="code-container">
+                  <pre><code>&lt;StudentCard 
+  student={juanProfile} 
+  isActive={true} 
+/&gt;</code></pre>
+                </div>
+              </div>
+            </div>
+
+            <div class="takeaway-box">
+              <strong>💡 Key Takeaway:</strong> Props are <strong>immutable (read-only)</strong> in the child component. They are identical to passing arguments to a function or constructor.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4. Project Structure & Config Explorer -->
+      <section id="structure">
+        <h2 class="section-title">4. Project Structure & Configuration Files Explorer</h2>
+        <p>Click any file or folder in the tree below to inspect its exact location, purpose, and key configuration options:</p>
+
+        <div class="explorer-wrapper">
+          <!-- Left: File Tree -->
+          <div class="explorer-tree">
+            <div class="explorer-tree-title">📁 Project Files</div>
+            <div class="tree-item active" onclick="showFileDetail('app-json')">⚙️ app.json</div>
+            <div class="tree-item" onclick="showFileDetail('package-json')">📦 package.json</div>
+            <div class="tree-item" onclick="showFileDetail('tsconfig')">🔧 tsconfig.json</div>
+            <div class="tree-item" onclick="showFileDetail('gitignore')">🚫 .gitignore</div>
+            <div class="tree-item" onclick="showFileDetail('index-ts')">📄 index.ts</div>
+            <div class="tree-item" onclick="showFileDetail('app-tsx')">📄 App.tsx</div>
+            <div class="tree-item" onclick="showFileDetail('types')">📁 src/types/student.ts</div>
+            <div class="tree-item" onclick="showFileDetail('components')">📁 src/components/</div>
+            <div class="tree-item" onclick="showFileDetail('node-modules')">📁 node_modules/</div>
+          </div>
+
+          <!-- Right: Dynamic File Detail Card -->
+          <div class="explorer-detail" id="fileDetailCard">
+            <!-- Injected dynamically via JS -->
+          </div>
+        </div>
+      </section>
+
+      <!-- Module 1: Expo & Terminal Command Generator -->
+      <section id="module-1">
+        <h2 class="section-title">Module 1 — Scaffolding, Metro & Fast Refresh <span class="badge">Exercise 1</span></h2>
+        <p>Scaffold a clean Expo project with TypeScript, launch the Metro bundler, and verify Fast Refresh.</p>
+        
+        <!-- CLI Generator -->
+        <div class="cli-generator-box">
+          <div style="font-size: 13px; font-weight: 800; color: var(--primary); margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">
+            ⚡ Instant Terminal Command Generator (Bootstrap Helper)
+          </div>
+          <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 14px;">Select your preferred package manager and operating system to generate the exact terminal command sequence ready to copy and paste:</p>
+          
+          <div class="cli-config-grid">
+            <div>
+              <label class="cli-label">Package Manager:</label>
+              <div class="cli-pills" id="pkgSelector">
+                <button class="cli-pill active" onclick="setCliPkg('npm')">npm</button>
+                <button class="cli-pill" onclick="setCliPkg('pnpm')">pnpm</button>
+                <button class="cli-pill" onclick="setCliPkg('yarn')">yarn</button>
+                <button class="cli-pill" onclick="setCliPkg('bun')">bun</button>
+              </div>
+            </div>
+            <div>
+              <label class="cli-label">Operating System / Shell:</label>
+              <div class="cli-pills" id="osSelector">
+                <button class="cli-pill active" onclick="setCliOs('win-ps')">Windows (PowerShell)</button>
+                <button class="cli-pill" onclick="setCliOs('win-cmd')">Windows (CMD)</button>
+                <button class="cli-pill" onclick="setCliOs('mac')">macOS / Linux (Bash)</button>
+              </div>
+            </div>
+            <div>
+              <label class="cli-label">Project Directory / Slug:</label>
+              <input type="text" id="cliProjectName" class="cli-input" value="dorsu-campus-pass" oninput="updateCliScript()">
+            </div>
+          </div>
+
+          <div style="display: flex; align-items: center; gap: 8px; margin: 10px 0 14px;">
+            <input type="checkbox" id="cliWebSupport" checked onchange="updateCliScript()" style="width: 16px; height: 16px; accent-color: var(--primary); cursor: pointer;">
+            <label for="cliWebSupport" style="font-size: 12.5px; font-weight: 600; cursor: pointer;">Include Web Testing Packages (<code>react-dom</code> & <code>react-native-web</code> for browser testing)</label>
+          </div>
+
+          <div class="code-container" style="margin-top: 10px;">
+            <div class="code-header">
+              <span class="code-lang" id="cliTerminalTitle">Terminal Commands (npm • PowerShell)</span>
+              <button class="btn-copy" onclick="copyCode(this)">📋 Copy Command Sequence</button>
+            </div>
+            <pre><code id="cliGeneratedOutput"></code></pre>
+          </div>
+        </div>
+
+        <div class="callout callout-warning">
+          <div class="callout-icon">⚡</div>
+          <div>
+            <strong>Fast Refresh Verification:</strong> Modify the text in <code>App.tsx</code> to <em>"DOrSU Campus Pass v1.0"</em> and save. Notice that your phone updates within 1 second without a full page reload or loss of state.
+          </div>
+        </div>
+      </section>
+
+      <!-- Module 2 -->
+      <section id="module-2">
+        <h2 class="section-title">Module 2 — Core Primitives & JSX Anatomy <span class="badge">Exercise 2</span></h2>
+        <p>In mobile development, there is no DOM. Web tags like <code>&lt;div&gt;</code>, <code>&lt;p&gt;</code>, and <code>&lt;button&gt;</code> do not exist. Instead, React Native provides native primitives:</p>
+
+        <div class="data-table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Web Element (HTML)</th>
+                <th>React Native Primitive</th>
+                <th>Key Mobile Characteristics</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>&lt;div&gt;</code></td>
+                <td><code>&lt;View&gt;</code></td>
+                <td>Flex container by default; flexDirection is <strong>column</strong> (vertical).</td>
+              </tr>
+              <tr>
+                <td><code>&lt;p&gt;, &lt;span&gt;, &lt;h1&gt;</code></td>
+                <td><code>&lt;Text&gt;</code></td>
+                <td><strong>Mandatory</strong> for all text. Putting raw text in <code>&lt;View&gt;</code> crashes the app.</td>
+              </tr>
+              <tr>
+                <td><code>&lt;img&gt;</code></td>
+                <td><code>&lt;Image&gt;</code></td>
+                <td>Remote URIs require explicit <code>width</code> and <code>height</code> in styles.</td>
+              </tr>
+              <tr>
+                <td><code>&lt;button&gt;</code></td>
+                <td><code>&lt;Pressable&gt;</code></td>
+                <td>Modern touchable primitive supporting hover, focus, and dynamic pressed states.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Module 3 -->
+      <section id="module-3">
+        <h2 class="section-title">Module 3 — Modular Components & TypeScript Props <span class="badge">Exercise 3</span></h2>
+        <p>Establish strict type contracts and extract the profile card into an isolated, reusable file.</p>
+
+        <h3 class="module-subtitle">Step 3.1: Define TypeScript Contract (src/types/student.ts)</h3>
+        <div class="code-container">
+          <div class="code-header">
+            <span class="code-lang">src/types/student.ts</span>
+            <button class="btn-copy" onclick="copyCode(this)">📋 Copy</button>
+          </div>
+          <pre><code><span class="kw">export interface</span> <span class="type">StudentProfile</span> {
+  <span class="prop">name</span>: <span class="type">string</span>;
+  <span class="prop">idNumber</span>: <span class="type">string</span>;
+  <span class="prop">program</span>: <span class="type">string</span>;
+  <span class="prop">yearLevel</span>: <span class="type">string</span>;
+  <span class="prop">avatarUrl</span>: <span class="type">string</span>;
+  <span class="prop">campus</span>: <span class="type">string</span>;
+}
+
+<span class="kw">export interface</span> <span class="type">StatusBadgeProps</span> {
+  <span class="prop">isActive</span>: <span class="type">boolean</span>;
+}</code></pre>
+        </div>
+
+        <h3 class="module-subtitle">Step 3.2: Reusable StudentCard Component</h3>
+        <div class="code-container">
+          <div class="code-header">
+            <span class="code-lang">src/components/StudentCard.tsx</span>
+            <button class="btn-copy" onclick="copyCode(this)">📋 Copy</button>
+          </div>
+          <pre><code><span class="kw">import</span> React <span class="kw">from</span> <span class="str">'react'</span>;
+<span class="kw">import</span> { StyleSheet, Text, View, Image } <span class="kw">from</span> <span class="str">'react-native'</span>;
+<span class="kw">import</span> { StudentProfile } <span class="kw">from</span> <span class="str">'../types/student'</span>;
+<span class="kw">import</span> { StatusBadge } <span class="kw">from</span> <span class="str">'./StatusBadge'</span>;
+
+<span class="kw">interface</span> <span class="type">StudentCardProps</span> {
+  <span class="prop">student</span>: <span class="type">StudentProfile</span>;
+  <span class="prop">isActive</span>: <span class="type">boolean</span>;
+}
+
+<span class="kw">export const</span> <span class="fn">StudentCard</span>: React.FC&lt;<span class="type">StudentCardProps</span>&gt; = ({ <span class="prop">student</span>, <span class="prop">isActive</span> }) => {
+  <span class="kw">return</span> (
+    &lt;<span class="tag">View</span> <span class="prop">style</span>={styles.card}&gt;
+      &lt;<span class="tag">View</span> <span class="prop">style</span>={styles.topRow}&gt;
+        &lt;<span class="tag">Image</span> <span class="prop">source</span>={{ uri: student.avatarUrl }} <span class="prop">style</span>={styles.avatar} /&gt;
+        &lt;<span class="tag">View</span> <span class="prop">style</span>={styles.details}&gt;
+          &lt;<span class="tag">Text</span> <span class="prop">style</span>={styles.name}&gt;{student.name}&lt;/<span class="tag">Text</span>&gt;
+          &lt;<span class="tag">Text</span> <span class="prop">style</span>={styles.idNumber}&gt;{student.idNumber}&lt;/<span class="tag">Text</span>&gt;
+          &lt;<span class="tag">Text</span> <span class="prop">style</span>={styles.program}&gt;{student.program}&lt;/<span class="tag">Text</span>&gt;
+          &lt;<span class="tag">Text</span> <span class="prop">style</span>={styles.yearLevel}&gt;{student.yearLevel}&lt;/<span class="tag">Text</span>&gt;
+        &lt;/<span class="tag">View</span>&gt;
+      &lt;/<span class="tag">View</span>&gt;
+      &lt;<span class="tag">StatusBadge</span> <span class="prop">isActive</span>={isActive} /&gt;
+      &lt;<span class="tag">Text</span> <span class="prop">style</span>={styles.campus}&gt;Campus: {student.campus}&lt;/<span class="tag">Text</span>&gt;
+    &lt;/<span class="tag">View</span>&gt;
+  );
+};</code></pre>
+        </div>
+      </section>
+
+      <!-- Module 4 -->
+      <section id="module-4">
+        <h2 class="section-title">Module 4 — Dynamic State Management with useState <span class="badge">Exercise 4</span></h2>
+        <p>Implement dynamic gate scans and administrative access toggles using React's <code>useState</code> hook.</p>
+
+        <div class="code-container">
+          <div class="code-header">
+            <span class="code-lang">src/components/ScanCounter.tsx</span>
+            <button class="btn-copy" onclick="copyCode(this)">📋 Copy</button>
+          </div>
+          <pre><code><span class="kw">import</span> React <span class="kw">from</span> <span class="str">'react'</span>;
+<span class="kw">import</span> { StyleSheet, Text, View, Pressable } <span class="kw">from</span> <span class="str">'react-native'</span>;
+
+<span class="kw">interface</span> <span class="type">ScanCounterProps</span> {
+  <span class="prop">count</span>: <span class="type">number</span>;
+  <span class="prop">onScan</span>: () =&gt; <span class="type">void</span>;
+  <span class="prop">onReset</span>: () =&gt; <span class="type">void</span>;
+}
+
+<span class="kw">export const</span> <span class="fn">ScanCounter</span>: React.FC&lt;<span class="type">ScanCounterProps</span>&gt; = ({ <span class="prop">count</span>, <span class="prop">onScan</span>, <span class="prop">onReset</span> }) =&gt; (
+  &lt;<span class="tag">View</span> <span class="prop">style</span>={styles.container}&gt;
+    &lt;<span class="tag">Text</span> <span class="prop">style</span>={styles.title}&gt;Campus Gate Verification Log&lt;/<span class="tag">Text</span>&gt;
+    &lt;<span class="tag">View</span> <span class="prop">style</span>={styles.counterDisplay}&gt;
+      &lt;<span class="tag">Text</span> <span class="prop">style</span>={styles.label}&gt;Today's Gate Entries:&lt;/<span class="tag">Text</span>&gt;
+      &lt;<span class="tag">Text</span> <span class="prop">style</span>={styles.value}&gt;{count}&lt;/<span class="tag">Text</span>&gt;
+    &lt;/<span class="tag">View</span>&gt;
+    &lt;<span class="tag">View</span> <span class="prop">style</span>={styles.btnRow}&gt;
+      &lt;<span class="tag">Pressable</span> <span class="prop">style</span>={styles.btnPrimary} <span class="prop">onPress</span>={onScan}&gt;
+        &lt;<span class="tag">Text</span> <span class="prop">style</span>={styles.btnText}&gt;+1 Scan at Gate&lt;/<span class="tag">Text</span>&gt;
+      &lt;/<span class="tag">Pressable</span>&gt;
+      &lt;<span class="tag">Pressable</span> <span class="prop">style</span>={styles.btnSecondary} <span class="prop">onPress</span>={onReset}&gt;
+        &lt;<span class="tag">Text</span> <span class="prop">style</span>={styles.btnSecText}&gt;Reset Scans&lt;/<span class="tag">Text</span>&gt;
+      &lt;/<span class="tag">Pressable</span>&gt;
+    &lt;/<span class="tag">View</span>&gt;
+  &lt;/<span class="tag">View</span>&gt;
+);</code></pre>
+        </div>
+
+        <div class="callout callout-info">
+          <div class="callout-icon">💡</div>
+          <div>
+            <strong>Functional State Updates:</strong> Always write <code>setGateScans(prev =&gt; prev + 1)</code> instead of <code>setGateScans(gateScans + 1)</code> to guarantee accurate state reconciliation during fast button taps.
+          </div>
+        </div>
+      </section>
+
+      <!-- Module 5: Flexbox Mastery & Visualizer -->
+      <section id="module-5">
+        <h2 class="section-title">Module 5 — StyleSheet & Flexbox Mastery <span class="badge">Exercise 5</span></h2>
+        <p>React Native styles are written using JavaScript objects. Learn how <code>flexDirection</code>, <code>justifyContent</code>, and <code>alignItems</code> govern mobile layouts.</p>
+
+        <!-- Flexbox Visualizer -->
+        <div class="flex-visualizer-container">
+          <div class="flex-controls-panel">
+            <div class="flex-control-group">
+              <label>flexDirection: <span class="val-badge" id="lblFlexDir">column</span></label>
+              <div class="pill-group" id="btnGroupFlexDir">
+                <button class="pill-btn active" onclick="setFlexProp('flexDirection', 'column')">column (RN Default)</button>
+                <button class="pill-btn" onclick="setFlexProp('flexDirection', 'row')">row</button>
+                <button class="pill-btn" onclick="setFlexProp('flexDirection', 'column-reverse')">column-reverse</button>
+                <button class="pill-btn" onclick="setFlexProp('flexDirection', 'row-reverse')">row-reverse</button>
+              </div>
+            </div>
+
+            <div class="flex-control-group">
+              <label>justifyContent (Main Axis): <span class="val-badge" id="lblJustify">flex-start</span></label>
+              <div class="pill-group" id="btnGroupJustify">
+                <button class="pill-btn active" onclick="setFlexProp('justifyContent', 'flex-start')">flex-start</button>
+                <button class="pill-btn" onclick="setFlexProp('justifyContent', 'center')">center</button>
+                <button class="pill-btn" onclick="setFlexProp('justifyContent', 'flex-end')">flex-end</button>
+                <button class="pill-btn" onclick="setFlexProp('justifyContent', 'space-between')">space-between</button>
+                <button class="pill-btn" onclick="setFlexProp('justifyContent', 'space-around')">space-around</button>
+                <button class="pill-btn" onclick="setFlexProp('justifyContent', 'space-evenly')">space-evenly</button>
+              </div>
+            </div>
+
+            <div class="flex-control-group">
+              <label>alignItems (Cross Axis): <span class="val-badge" id="lblAlign">stretch</span></label>
+              <div class="pill-group" id="btnGroupAlign">
+                <button class="pill-btn active" onclick="setFlexProp('alignItems', 'stretch')">stretch (Default)</button>
+                <button class="pill-btn" onclick="setFlexProp('alignItems', 'flex-start')">flex-start</button>
+                <button class="pill-btn" onclick="setFlexProp('alignItems', 'center')">center</button>
+                <button class="pill-btn" onclick="setFlexProp('alignItems', 'flex-end')">flex-end</button>
+              </div>
+            </div>
+
+            <div class="flex-control-group">
+              <label>gap (Spacing): <span class="val-badge" id="lblGap">12px</span></label>
+              <div class="pill-group" id="btnGroupGap">
+                <button class="pill-btn" onclick="setFlexGap('0')">0</button>
+                <button class="pill-btn" onclick="setFlexGap('8')">8px</button>
+                <button class="pill-btn active" onclick="setFlexGap('12')">12px</button>
+                <button class="pill-btn" onclick="setFlexGap('16')">16px</button>
+                <button class="pill-btn" onclick="setFlexGap('24')">24px</button>
+              </div>
+            </div>
+
+            <div class="flex-presets">
+              <span style="font-size: 11px; font-weight: 800; color: var(--text-muted); text-transform: uppercase;">Quick Presets:</span>
+              <button class="preset-btn" onclick="applyFlexPreset('header')">Card Header (Row + Space-Between)</button>
+              <button class="preset-btn" onclick="applyFlexPreset('stack')">Card Body (Column + Stretch)</button>
+              <button class="preset-btn" onclick="applyFlexPreset('actions')">Button Bar (Row + Equal Share)</button>
+            </div>
+          </div>
+
+          <!-- Live Preview Stage -->
+          <div class="flex-stage-wrapper">
+            <div class="flex-axis-indicator" id="flexAxisIndicator">
+              ↕ Main Axis: Vertical (justifyContent controls up/down) | ↔ Cross Axis: Horizontal (alignItems controls stretch/center)
+            </div>
+            <div class="flex-preview-stage" id="flexPreviewStage" style="flex-direction: column; justify-content: flex-start; align-items: stretch; gap: 12px;">
+              <div class="flex-item item-1">
+                <div class="item-title">Item 1: Header</div>
+                <div class="item-sub">DOrSU Institutional Banner</div>
+              </div>
+              <div class="flex-item item-2">
+                <div class="item-title">Item 2: StudentCard</div>
+                <div class="item-sub">Juan Carlos Dela Cruz</div>
+              </div>
+              <div class="flex-item item-3">
+                <div class="item-title">Item 3: ScanCounter</div>
+                <div class="item-sub">Gate Verification Log</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Generated React Native StyleSheet -->
+          <div class="code-container" style="margin: 0; border-radius: 0; border-left: none; border-right: none; border-bottom: none;">
+            <div class="code-header">
+              <span class="code-lang">Live Generated StyleSheet Object</span>
+              <button class="btn-copy" onclick="copyCode(this)">📋 Copy StyleSheet</button>
+            </div>
+            <pre><code id="flexGeneratedCode"></code></pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- Module 6 -->
+      <section id="module-6">
+        <h2 class="section-title">Module 6 — Synthesis Challenge: DOrSU Digital Campus Pass <span class="badge">Exercise 6</span></h2>
+        <p>Integrate all components into <code>App.tsx</code> with <code>SafeAreaView</code>, interactive controls, and peer props demo.</p>
+
+        <div class="callout callout-success">
+          <div class="callout-icon">🎉</div>
+          <div>
+            <strong>Interactive Test in Live Simulator:</strong> Interact with the virtual smartphone on the right side of this page to test the complete application flow right now!
+          </div>
+        </div>
+      </section>
+
+      <!-- 6. Knowledge Checks -->
+      <section id="quiz">
+        <h2 class="section-title">6. Interactive Knowledge Verification & Self-Assessment <span class="badge">Quiz Checks</span></h2>
+        <p>Test your conceptual understanding of React Native before writing code or submitting your lab. Select the best answer for each question:</p>
+
+        <div class="quiz-score-banner" id="quizScoreBanner">
+          <div class="quiz-score-info">
+            <span class="quiz-score-title">Concept Mastery Tracker</span>
+            <span class="quiz-score-text" id="quizScoreText">Answer the 4 concept checks below to verify your readiness.</span>
+          </div>
+          <div class="quiz-score-badge" id="quizScoreBadge">0 / 4 Answered</div>
+        </div>
+
+        <div class="quiz-cards-container">
+          <!-- Question 1 -->
+          <div class="quiz-card" id="qCard1">
+            <div class="quiz-q-num">Question 1 • Core Primitives</div>
+            <div class="quiz-question">In React Native, what happens if you place bare text directly inside a <code>&lt;View&gt;</code> without a <code>&lt;Text&gt;</code> component (e.g., <code>&lt;View&gt;Welcome to DOrSU&lt;/View&gt;</code>)?</div>
+            <div class="quiz-options">
+              <button class="quiz-opt" onclick="checkQuiz(1, 0, false)">A. It automatically renders as standard unstyled text.</button>
+              <button class="quiz-opt" onclick="checkQuiz(1, 1, false)">B. The bundler compiles it into an HTML &lt;span&gt; element.</button>
+              <button class="quiz-opt" onclick="checkQuiz(1, 2, true)">C. The mobile app crashes at runtime with a "Raw text must be wrapped in an explicit &lt;Text&gt; component" error.</button>
+              <button class="quiz-opt" onclick="checkQuiz(1, 3, false)">D. It displays inside the mobile device's system status bar.</button>
+            </div>
+            <div class="quiz-feedback" id="qFeed1"></div>
+          </div>
+
+          <!-- Question 2 -->
+          <div class="quiz-card" id="qCard2">
+            <div class="quiz-q-num">Question 2 • Unidirectional Data Flow</div>
+            <div class="quiz-question">Why should a child component (such as <code>StudentCard</code>) never execute <code>props.isActive = false</code>?</div>
+            <div class="quiz-options">
+              <button class="quiz-opt" onclick="checkQuiz(2, 0, true)">A. React Native enforces unidirectional data flow; props are strictly immutable (read-only) and can only be updated by the parent holding state.</button>
+              <button class="quiz-opt" onclick="checkQuiz(2, 1, false)">B. Because 'isActive' is a reserved system keyword in TypeScript.</button>
+              <button class="quiz-opt" onclick="checkQuiz(2, 2, false)">C. Because boolean props can only be modified inside a while loop.</button>
+              <button class="quiz-opt" onclick="checkQuiz(2, 3, false)">D. Reassigning props is allowed, but only inside functional components.</button>
+            </div>
+            <div class="quiz-feedback" id="qFeed2"></div>
+          </div>
+
+          <!-- Question 3 -->
+          <div class="quiz-card" id="qCard3">
+            <div class="quiz-q-num">Question 3 • Layout Engine Defaults</div>
+            <div class="quiz-question">How does React Native's default Flexbox layout engine differ fundamentally from standard Web CSS?</div>
+            <div class="quiz-options">
+              <button class="quiz-opt" onclick="checkQuiz(3, 0, false)">A. React Native does not support Flexbox, only CSS Grid.</button>
+              <button class="quiz-opt" onclick="checkQuiz(3, 1, true)">B. In React Native, flexDirection defaults to 'column' (vertical), whereas Web CSS defaults to 'row' (horizontal).</button>
+              <button class="quiz-opt" onclick="checkQuiz(3, 2, false)">C. In React Native, dimensions must always specify unit strings like 'px' or 'rem'.</button>
+              <button class="quiz-opt" onclick="checkQuiz(3, 3, false)">D. React Native automatically aligns all elements with float: left.</button>
+            </div>
+            <div class="quiz-feedback" id="qFeed3"></div>
+          </div>
+
+          <!-- Question 4 -->
+          <div class="quiz-card" id="qCard4">
+            <div class="quiz-q-num">Question 4 • State Reactivity</div>
+            <div class="quiz-question">In Android Java, you imperatively write <code>tv.setText(String.valueOf(count))</code>. What is the declarative equivalent in React Native?</div>
+            <div class="quiz-options">
+              <button class="quiz-opt" onclick="checkQuiz(4, 0, false)">A. document.getElementById('counter').innerText = count;</button>
+              <button class="quiz-opt" onclick="checkQuiz(4, 1, false)">B. Calling App.reboot() to redraw the screen canvas.</button>
+              <button class="quiz-opt" onclick="checkQuiz(4, 2, true)">C. Calling setCount(prev => prev + 1), which schedules a re-render of the JSX view tree where &lt;Text&gt;{count}&lt;/Text&gt; updates automatically.</button>
+              <button class="quiz-opt" onclick="checkQuiz(4, 3, false)">D. Directly mutating this.state.count = count + 1.</button>
+            </div>
+            <div class="quiz-feedback" id="qFeed4"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 7. Pre-Submission Code Validator -->
+      <section id="validator">
+        <h2 class="section-title">7. Pre-Submission Code Validator & Rubric Auto-Check <span class="badge">Self-Audit</span></h2>
+        <p>Paste your component or screen code (<code>App.tsx</code>, <code>StudentCard.tsx</code>, or <code>ScanCounter.tsx</code>) below to run a client-side static analysis check against the rubric criteria before final submission:</p>
+
+        <div class="validator-wrapper">
+          <div class="validator-input-header">
+            <div class="validator-tabs">
+              <button class="v-tab active" id="vTabApp" onclick="switchVTab('App.tsx')">App.tsx</button>
+              <button class="v-tab" id="vTabCard" onclick="switchVTab('StudentCard.tsx')">StudentCard.tsx</button>
+              <button class="v-tab" id="vTabCounter" onclick="switchVTab('ScanCounter.tsx')">ScanCounter.tsx</button>
+            </div>
+            <button class="btn-sample-code" onclick="loadReferenceCodeIntoValidator()">⚡ Load Compliant Sample Code</button>
+          </div>
+
+          <textarea id="validatorCodeInput" class="validator-textarea" placeholder="// Paste your React Native component or App.tsx code here...
+import React, { useState } from 'react';
+import { StyleSheet, Text, View, SafeAreaView, Pressable } from 'react-native';
+..."></textarea>
+
+          <div class="validator-actions">
+            <button class="btn-validate" onclick="runCodeValidation()">🔍 Run Pre-Submission Diagnostic</button>
+            <button class="btn-clear" onclick="clearValidator()">Clear</button>
+          </div>
+
+          <!-- Diagnostic Results Box -->
+          <div id="validatorResults" class="validator-results-box">
+            <div class="validator-empty-state">
+              <span>Paste your code above and click <strong>"Run Pre-Submission Diagnostic"</strong> to audit compliance with the 100-point rubric.</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 8. Rubric -->
+      <section id="rubric">
+        <h2 class="section-title">8. Grading Rubric (100 Points Total)</h2>
+        <div class="data-table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Criteria</th>
+                <th>Exemplary (90-100%)</th>
+                <th>Satisfactory (75-89%)</th>
+                <th>Needs Work (&lt;75%)</th>
+                <th>Pts</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Component Architecture & JSX Structure</strong></td>
+                <td>Clean hierarchy; native primitives used correctly; no invalid web tags; clean modular separation.</td>
+                <td>Functional components created; minor structural issues or redundant nesting.</td>
+                <td>Missing modular files; raw text outside &lt;Text&gt; tags; monolithic single file.</td>
+                <td><strong>25</strong></td>
+              </tr>
+              <tr>
+                <td><strong>TypeScript Interfaces & Props</strong></td>
+                <td>Strict interfaces (<code>StudentProfile</code>); zero <code>any</code> types; clean data flow.</td>
+                <td>Props passed successfully; minor type annotation missing.</td>
+                <td>Props hardcoded or mutated in child; TypeScript errors ignored.</td>
+                <td><strong>20</strong></td>
+              </tr>
+              <tr>
+                <td><strong>State Management & Interactivity</strong></td>
+                <td><code>useState</code> with functional updates; smooth re-renders on touch; bug-free.</td>
+                <td>Counter and toggle work as expected; minor state handling flaw.</td>
+                <td>State fails to re-render; buttons unresponsive; state mutated directly.</td>
+                <td><strong>25</strong></td>
+              </tr>
+              <tr>
+                <td><strong>StyleSheet & Flexbox Layout</strong></td>
+                <td>Polished layout with <code>StyleSheet.create()</code>; proper use of <code>gap</code> and alignment.</td>
+                <td>Responsive layout with clean alignment; minor spacing irregularities.</td>
+                <td>Broken layout; overlapping text; hardcoded non-responsive dimensions.</td>
+                <td><strong>20</strong></td>
+              </tr>
+              <tr>
+                <td><strong>Documentation & Screenshots</strong></td>
+                <td>Crystal-clear screenshots for all 6 modules; insightful technical reflections; clean PDF format.</td>
+                <td>Screenshots provided for most modules; brief reflections.</td>
+                <td>Missing substantial screenshots; incomplete reflections.</td>
+                <td><strong>10</strong></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 9. Deliverables & Submission Guidelines -->
+      <section id="deliverables">
+        <h2 class="section-title">9. Laboratory Deliverables & Submission Guidelines <span class="badge">Mandatory</span></h2>
+        <p>To receive full credit (100 Points), students must complete all 6 laboratory modules and submit the following three official deliverables via the DOrSU FCET LMS / Google Classroom portal:</p>
+
+        <div class="deliverable-grid">
+          <!-- Deliverable 1: PDF Laboratory Worksheet -->
+          <div class="deliverable-card">
+            <div class="deliv-header">
+              <div class="deliv-icon-title">
+                <span class="deliv-icon">📄</span>
+                <span class="deliv-title">1. PDF Laboratory Report</span>
+              </div>
+              <span class="deliv-badge">PDF Document</span>
+            </div>
+            <p class="deliv-desc">The completed, professionally formatted laboratory report containing source code listings, technical reflections, and high-resolution annotated screenshots.</p>
+            <div class="deliv-specs">
+              <div style="font-weight: 700; color: var(--primary); margin-bottom: 4px;">Requirements & Specifications:</div>
+              <ul style="margin-left: 16px; margin-bottom: 0;">
+                <li><strong>Strict Naming:</strong> <code>ITMSD1_Lab03_[LastName]_[FirstName].pdf</code></li>
+                <li><strong>6 Module Screenshots:</strong> High-res captures of terminal outputs & running mobile screen.</li>
+                <li><strong>Code Listings:</strong> Complete code for <code>App.tsx</code>, <code>StudentCard.tsx</code>, <code>ScanCounter.tsx</code>, and <code>student.ts</code>.</li>
+                <li><strong>Written Reflection:</strong> Detailed answers to the evaluation and conceptual bridge questions.</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Deliverable 2: Public GitHub Repository -->
+          <div class="deliverable-card">
+            <div class="deliv-header">
+              <div class="deliv-icon-title">
+                <span class="deliv-icon">🐙</span>
+                <span class="deliv-title">2. Public GitHub Repository</span>
+              </div>
+              <span class="deliv-badge">Version Control</span>
+            </div>
+            <p class="deliv-desc">The complete Expo SDK 57 project repository pushed to GitHub, demonstrating proper Git version control practices and clean modular architecture.</p>
+            <div class="deliv-specs">
+              <div style="font-weight: 700; color: var(--primary); margin-bottom: 4px;">Requirements & Specifications:</div>
+              <ul style="margin-left: 16px; margin-bottom: 0;">
+                <li><strong>Public Visibility:</strong> Verify repository visibility is set to <strong>PUBLIC</strong> (not private).</li>
+                <li><strong>Git Cleanliness:</strong> <code>node_modules/</code> and <code>.expo/</code> must be strictly ignored in <code>.gitignore</code>.</li>
+                <li><strong>Commit History:</strong> Meaningful commit messages representing each of the 6 exercises.</li>
+                <li><strong>README.md:</strong> Project documentation with setup and run instructions (<code>npm install && npx expo start</code>).</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Deliverable 3: Mobile Screen Recording / Demo -->
+          <div class="deliverable-card">
+            <div class="deliv-header">
+              <div class="deliv-icon-title">
+                <span class="deliv-icon">🎥</span>
+                <span class="deliv-title">3. Live App Demo / Recording</span>
+              </div>
+              <span class="deliv-badge">30–60 Seconds</span>
+            </div>
+            <p class="deliv-desc">A short video screen recording or live in-person mobile demonstration proving that state interactivity and components function without bugs.</p>
+            <div class="deliv-specs">
+              <div style="font-weight: 700; color: var(--primary); margin-bottom: 4px;">Demonstration Checklist:</div>
+              <ul style="margin-left: 16px; margin-bottom: 0;">
+                <li><strong>Gate Counter:</strong> Tap <code>+1 Scan at Gate</code> at least 3 times; verify counter updates.</li>
+                <li><strong>Reset Action:</strong> Tap <code>Reset Scans</code>; verify counter returns to 0.</li>
+                <li><strong>Access Toggle:</strong> Toggle pass suspension; verify pill badge turns red ("SUSPENDED") and reactivates to green ("ACTIVE").</li>
+                <li><strong>Video Link:</strong> MP4 file upload or unlisted YouTube/Google Drive link in the report.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Submission Policy Callout -->
+        <div class="callout callout-warning">
+          <div class="callout-icon">📋</div>
+          <div>
+            <strong>Institutional Submission Policy & Deadlines:</strong>
+            <ul style="margin: 6px 0 0 16px; font-size: 12.5px;">
+              <li><strong>Submission Portal:</strong> Submit via the official DOrSU Google Classroom / LMS assignment portal before the deadline.</li>
+              <li><strong>Late Submissions:</strong> Deducted 10 points per calendar day late. No submissions accepted after 3 calendar days post-deadline.</li>
+              <li><strong>Academic Integrity:</strong> All code and documentation must represent the student's individual intellectual work. Redundant duplicate code or verbatim plagiarized worksheets will receive a grade of zero (0) and be referred to the FCET Academic Committee.</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Interactive Pre-Submission Checklist -->
+        <h3 class="module-subtitle">Pre-Submission Verification Checklist</h3>
+        <p>Check off each deliverable item below before submitting your laboratory package to ensure full rubric compliance:</p>
+        <ul class="checklist" id="delivChecklist">
+          <li class="checklist-item" onclick="toggleCheck(this)"><input type="checkbox"> <span>My PDF report strictly adheres to the naming standard: <code>ITMSD1_Lab03_[LastName]_[FirstName].pdf</code>.</span></li>
+          <li class="checklist-item" onclick="toggleCheck(this)"><input type="checkbox"> <span>All 6 laboratory module exercises have corresponding high-resolution, readable screenshots included.</span></li>
+          <li class="checklist-item" onclick="toggleCheck(this)"><input type="checkbox"> <span>My GitHub repository is set to <strong>PUBLIC</strong> and verified accessible from an incognito browser window.</span></li>
+          <li class="checklist-item" onclick="toggleCheck(this)"><input type="checkbox"> <span>I verified that heavy folders (<code>node_modules/</code> and <code>.expo/</code>) were NOT pushed to my GitHub repository.</span></li>
+          <li class="checklist-item" onclick="toggleCheck(this)"><input type="checkbox"> <span>I ran the <strong>Pre-Submission Code Validator</strong> tool in Section 7 and achieved a compliance score of 90%+.</span></li>
+          <li class="checklist-item" onclick="toggleCheck(this)"><input type="checkbox"> <span>Interactive touch events (Gate Scan, Reset, and Access Toggle) have been tested and function without crashes.</span></li>
+        </ul>
+      </section>
+
+      <!-- 10. Cheat Sheet -->
+      <section id="cheatsheet">
+        <h2 class="section-title">10. Quick Reference Cheat Sheet</h2>
+        <div class="data-table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>API / Element</th>
+                <th>Role</th>
+                <th>Code Snippet</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td><code>&lt;View&gt;</code></td><td>Container</td><td><code>&lt;View style={styles.card}&gt;...&lt;/View&gt;</code></td></tr>
+              <tr><td><code>&lt;Text&gt;</code></td><td>Typography</td><td><code>&lt;Text style={styles.name}&gt;Juan&lt;/Text&gt;</code></td></tr>
+              <tr><td><code>&lt;Image&gt;</code></td><td>Remote Image</td><td><code>&lt;Image source={{ uri: '...' }} style={{ width: 60, height: 60 }} /&gt;</code></td></tr>
+              <tr><td><code>&lt;Pressable&gt;</code></td><td>Touch Button</td><td><code>&lt;Pressable onPress={handlePress}&gt;...&lt;/Pressable&gt;</code></td></tr>
+              <tr><td><code>useState()</code></td><td>Local State</td><td><code>const [count, setCount] = useState&lt;number&gt;(0);</code></td></tr>
+              <tr><td><code>flexDirection</code></td><td>Flex Axis</td><td><code>flexDirection: 'row' /* default is 'column' */</code></td></tr>
+              <tr><td><code>gap</code></td><td>Item Spacing</td><td><code>gap: 12 /* spacing between children */</code></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 11. Tutorials & References -->
+      <section id="tutorials">
+        <h2 class="section-title">11. References & Curated Tutorials</h2>
+        <div class="resource-grid">
+          <a href="https://reactnative.dev/docs/getting-started" target="_blank" class="resource-card">
+            <span class="resource-tag">Official Docs</span>
+            <div class="resource-title">React Native Getting Started</div>
+            <div class="resource-desc">Core components, props, state, and StyleSheet documentation from Meta.</div>
+            <span class="resource-link-text">Visit Documentation →</span>
+          </a>
+          <a href="https://docs.expo.dev/" target="_blank" class="resource-card">
+            <span class="resource-tag">Toolchain</span>
+            <div class="resource-title">Expo Documentation</div>
+            <div class="resource-desc">Managed workflow guide, Expo Go configuration, and Fast Refresh debugging.</div>
+            <span class="resource-link-text">Visit Expo Docs →</span>
+          </a>
+          <a href="https://www.youtube.com/playlist?list=PL4cUxeGkcC9ixPU-QkScoRBVxtPPzVjrQ" target="_blank" class="resource-card">
+            <span class="resource-tag">Video Playlist</span>
+            <div class="resource-title">The Net Ninja React Native</div>
+            <div class="resource-desc">Hands-on, beginner-friendly video walkthrough of core components and Flexbox.</div>
+            <span class="resource-link-text">Watch on YouTube →</span>
+          </a>
+          <a href="https://snack.expo.dev/" target="_blank" class="resource-card">
+            <span class="resource-tag">Interactive Sandbox</span>
+            <div class="resource-title">React Native Snack</div>
+            <div class="resource-desc">Test code in your browser with zero local installation on virtual phones.</div>
+            <span class="resource-link-text">Launch Snack →</span>
+          </a>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- Right Sticky Column: Interactive Simulated Smartphone -->
+    <div class="phone-simulator-sticky">
+      <div class="phone-wrapper">
+        <div class="phone-notch">
+          <div class="phone-camera"></div>
+        </div>
+
+        <div class="phone-screen" id="simPhoneScreen">
+          <!-- Institutional Header -->
+          <div class="sim-header">
+            <h4>DAVAO ORIENTAL STATE UNIVERSITY</h4>
+            <p>FACULTY OF COMPUTING, ENGINEERING, AND TECHNOLOGY</p>
+            <span>OFFICIAL STUDENT DIGITAL PASS • AY 2026–2027</span>
+          </div>
+
+          <!-- Primary Student ID Card -->
+          <div class="sim-card" id="simPrimaryCard">
+            <div class="sim-card-top">
+              <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=200" alt="Avatar" class="sim-avatar">
+              <div class="sim-info">
+                <h5 id="simStudentName">JUAN CARLOS D. DELA CRUZ</h5>
+                <div class="sim-id">ID: 2024-008492-MT</div>
+                <div class="sim-course">BS in Information Technology (BSIT)</div>
+                <div class="sim-yr">3rd Year — Section A</div>
+              </div>
+            </div>
+
+            <!-- Dynamic Status Badge -->
+            <div class="sim-badge active" id="simBadge">
+              <div class="sim-dot"></div>
+              <span id="simBadgeText">STATUS: VERIFIED ACTIVE PASS</span>
+            </div>
+
+            <div class="sim-campus">Campus: Main Campus (Guang-guang, Mati City)</div>
+          </div>
+
+          <!-- Interactive Control Panel -->
+          <div class="sim-controls">
+            <div class="sim-controls-title">Campus Gate Verification Log</div>
+            <div class="sim-counter-box">
+              <label>Today's Gate Entries:</label>
+              <span class="sim-counter-val" id="simCounterDisplay">3</span>
+            </div>
+
+            <div class="sim-btn-row">
+              <button class="sim-btn sim-btn-primary" onclick="simScanGate()">+1 Scan at Gate</button>
+              <button class="sim-btn sim-btn-secondary" onclick="simResetGate()">Reset Scans</button>
+            </div>
+
+            <button class="sim-btn-toggle suspend-btn" id="simToggleBtn" onclick="simToggleStatus()">
+              ⚠️ Simulate Pass Suspension
+            </button>
+
+            <button class="sim-btn-peer" id="simPeerBtn" onclick="simTogglePeer()">
+              Show Peer Component Demo
+            </button>
+          </div>
+
+          <!-- Peer Student Demo Card (Initially Hidden) -->
+          <div class="sim-card" id="simPeerCard" style="display: none; border-top: 2px solid #00758F;">
+            <div style="font-size: 8px; font-weight: 800; color: #00758F; margin-bottom: 6px;">PEER PROPS DEMO:</div>
+            <div class="sim-card-top">
+              <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200" alt="Avatar" class="sim-avatar">
+              <div class="sim-info">
+                <h5>MARIA CLARA S. SANTOS</h5>
+                <div class="sim-id">ID: 2024-009183-MT</div>
+                <div class="sim-course">BS in Information Technology (BSIT)</div>
+                <div class="sim-yr">2nd Year — Section B</div>
+              </div>
+            </div>
+            <div class="sim-badge active">
+              <div class="sim-dot"></div>
+              <span>STATUS: VERIFIED ACTIVE PASS</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="phone-simulator-label">📱 Live Interactive Mobile Simulator</div>
+    </div>
+  </main>
+
+  <!-- JavaScript for Interactivity -->
+  <script>
+    // Theme Toggle
+    const themeBtn = document.getElementById('themeToggle');
+    const currentTheme = localStorage.getItem('dorsu_theme') || 'light';
+    document.documentElement.setAttribute('data-theme', currentTheme);
+
+    themeBtn.addEventListener('click', () => {
+      const active = document.documentElement.getAttribute('data-theme');
+      const target = active === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', target);
+      localStorage.setItem('dorsu_theme', target);
+    });
+
+    // 1-Click Copy Code
+    function copyCode(btn) {
+      const codeBlock = btn.closest('.code-container').querySelector('code');
+      const text = codeBlock.innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        const orig = btn.innerText;
+        btn.innerText = '✅ Copied!';
+        btn.classList.add('copied');
+        setTimeout(() => {
+          btn.innerText = orig;
+          btn.classList.remove('copied');
+        }, 1800);
+      });
+    }
+
+    // Tab Switching
+    function switchTab(btn, targetId) {
+      const container = btn.closest('.tab-container');
+      container.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      container.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(targetId).classList.add('active');
+    }
+
+    // Checklist Progress
+    function toggleCheck(item) {
+      const cb = item.querySelector('input[type="checkbox"]');
+      cb.checked = !cb.checked;
+      item.classList.toggle('done', cb.checked);
+    }
+
+    // Interactive Phone Simulator State
+    let scans = 3;
+    let isActive = true;
+    let showPeer = false;
+
+    function simScanGate() {
+      scans++;
+      document.getElementById('simCounterDisplay').innerText = scans;
+    }
+
+    function simResetGate() {
+      scans = 0;
+      document.getElementById('simCounterDisplay').innerText = scans;
+    }
+
+    function simToggleStatus() {
+      isActive = !isActive;
+      const badge = document.getElementById('simBadge');
+      const badgeText = document.getElementById('simBadgeText');
+      const toggleBtn = document.getElementById('simToggleBtn');
+
+      if (isActive) {
+        badge.className = 'sim-badge active';
+        badgeText.innerText = 'STATUS: VERIFIED ACTIVE PASS';
+        toggleBtn.className = 'sim-btn-toggle suspend-btn';
+        toggleBtn.innerText = '⚠️ Simulate Pass Suspension';
+      } else {
+        badge.className = 'sim-badge suspended';
+        badgeText.innerText = 'STATUS: ACCESS TEMPORARILY SUSPENDED';
+        toggleBtn.className = 'sim-btn-toggle activate-btn';
+        toggleBtn.innerText = '✅ Reactivate Student Pass';
+      }
+    }
+
+    function simTogglePeer() {
+      showPeer = !showPeer;
+      const peerCard = document.getElementById('simPeerCard');
+      const peerBtn = document.getElementById('simPeerBtn');
+      peerCard.style.display = showPeer ? 'block' : 'none';
+      peerBtn.innerText = showPeer ? 'Hide Peer Demo' : 'Show Peer Component Demo';
+    }
+
+    // CLI BOOTSTRAP GENERATOR LOGIC
+    let currentPkg = 'npm';
+    let currentOs = 'win-ps';
+
+    function setCliPkg(pkg) {
+      currentPkg = pkg;
+      document.querySelectorAll('#pkgSelector .cli-pill').forEach(b => {
+        b.classList.toggle('active', b.innerText.toLowerCase() === pkg);
+      });
+      updateCliScript();
+    }
+
+    function setCliOs(os) {
+      currentOs = os;
+      document.querySelectorAll('#osSelector .cli-pill').forEach(b => {
+        const text = b.innerText.toLowerCase();
+        let match = false;
+        if (os === 'win-ps' && text.includes('powershell')) match = true;
+        if (os === 'win-cmd' && text.includes('cmd')) match = true;
+        if (os === 'mac' && text.includes('macos')) match = true;
+        b.classList.toggle('active', match);
+      });
+      updateCliScript();
+    }
+
+    function updateCliScript() {
+      const name = (document.getElementById('cliProjectName').value || 'dorsu-campus-pass').trim().toLowerCase().replace(/\s+/g, '-');
+      const web = document.getElementById('cliWebSupport').checked;
+      
+      let scaffoldCmd = '';
+      let cdCmd = `cd ${name}`;
+      let webInstallCmd = '';
+      let startCmd = '';
+
+      if (currentPkg === 'npm') {
+        scaffoldCmd = `npx create-expo-app@latest ${name} --template blank-typescript`;
+        webInstallCmd = `npx expo install react-dom react-native-web`;
+        startCmd = `npx expo start`;
+      } else if (currentPkg === 'pnpm') {
+        scaffoldCmd = `pnpm create expo-app ${name} --template blank-typescript`;
+        webInstallCmd = `pnpm expo install react-dom react-native-web`;
+        startCmd = `pnpm expo start`;
+      } else if (currentPkg === 'yarn') {
+        scaffoldCmd = `yarn create expo-app ${name} --template blank-typescript`;
+        webInstallCmd = `yarn expo install react-dom react-native-web`;
+        startCmd = `yarn expo start`;
+      } else if (currentPkg === 'bun') {
+        scaffoldCmd = `bun create expo-app ${name} --template blank-typescript`;
+        webInstallCmd = `bun expo install react-dom react-native-web`;
+        startCmd = `bun expo start`;
+      }
+
+      let terminalTitle = `Terminal Commands (${currentPkg} • `;
+      if (currentOs === 'win-ps') terminalTitle += 'PowerShell)';
+      else if (currentOs === 'win-cmd') terminalTitle += 'Windows CMD)';
+      else terminalTitle += 'macOS / Linux)';
+
+      document.getElementById('cliTerminalTitle').innerText = terminalTitle;
+
+      let commands = [];
+      commands.push(`# 1. Scaffold clean TypeScript React Native Expo project`);
+      commands.push(scaffoldCmd);
+      commands.push(`\n# 2. Enter workspace directory`);
+      commands.push(cdCmd);
+
+      if (web) {
+        commands.push(`\n# 3. Install web support for testing in browser`);
+        commands.push(webInstallCmd);
+      }
+
+      commands.push(`\n# 4. Start Metro bundler`);
+      commands.push(startCmd);
+
+      document.getElementById('cliGeneratedOutput').innerText = commands.join('\n');
+    }
+
+    updateCliScript();
+
+    // FLEXBOX VISUALIZER LOGIC
+    let flexState = {
+      flexDirection: 'column',
+      justifyContent: 'flex-start',
+      alignItems: 'stretch',
+      gap: 12
+    };
+
+    function setFlexProp(prop, val) {
+      flexState[prop] = val;
+      
+      let containerId = '';
+      if (prop === 'flexDirection') {
+        containerId = '#btnGroupFlexDir';
+        document.getElementById('lblFlexDir').innerText = val;
+      } else if (prop === 'justifyContent') {
+        containerId = '#btnGroupJustify';
+        document.getElementById('lblJustify').innerText = val;
+      } else if (prop === 'alignItems') {
+        containerId = '#btnGroupAlign';
+        document.getElementById('lblAlign').innerText = val;
+      }
+
+      if (containerId) {
+        document.querySelectorAll(`${containerId} .pill-btn`).forEach(b => {
+          b.classList.toggle('active', b.innerText.startsWith(val));
+        });
+      }
+
+      renderFlexStage();
+    }
+
+    function setFlexGap(gapVal) {
+      flexState.gap = parseInt(gapVal, 10);
+      document.getElementById('lblGap').innerText = `${gapVal}px`;
+      document.querySelectorAll('#btnGroupGap .pill-btn').forEach(b => {
+        b.classList.toggle('active', b.innerText.includes(gapVal));
+      });
+      renderFlexStage();
+    }
+
+    function applyFlexPreset(preset) {
+      if (preset === 'header') {
+        setFlexProp('flexDirection', 'row');
+        setFlexProp('justifyContent', 'space-between');
+        setFlexProp('alignItems', 'center');
+        setFlexGap('12');
+      } else if (preset === 'stack') {
+        setFlexProp('flexDirection', 'column');
+        setFlexProp('justifyContent', 'flex-start');
+        setFlexProp('alignItems', 'stretch');
+        setFlexGap('12');
+      } else if (preset === 'actions') {
+        setFlexProp('flexDirection', 'row');
+        setFlexProp('justifyContent', 'center');
+        setFlexProp('alignItems', 'center');
+        setFlexGap('8');
+      }
+    }
+
+    function renderFlexStage() {
+      const stage = document.getElementById('flexPreviewStage');
+      stage.style.flexDirection = flexState.flexDirection;
+      stage.style.justifyContent = flexState.justifyContent;
+      stage.style.alignItems = flexState.alignItems;
+      stage.style.gap = `${flexState.gap}px`;
+
+      const isCol = flexState.flexDirection.startsWith('column');
+      const axisIndicator = document.getElementById('flexAxisIndicator');
+      if (isCol) {
+        axisIndicator.innerText = `↕ Main Axis: Vertical (justifyContent: ${flexState.justifyContent}) | ↔ Cross Axis: Horizontal (alignItems: ${flexState.alignItems})`;
+      } else {
+        axisIndicator.innerText = `↔ Main Axis: Horizontal (justifyContent: ${flexState.justifyContent}) | ↕ Cross Axis: Vertical (alignItems: ${flexState.alignItems})`;
+      }
+
+      const generatedCode = `const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    flexDirection: '${flexState.flexDirection}', /* ${isCol ? 'React Native default vertical flow' : 'Horizontal flow'} */
+    justifyContent: '${flexState.justifyContent}', /* Align along main axis */
+    alignItems: '${flexState.alignItems}', /* Align along cross axis */
+    gap: ${flexState.gap}, /* Gap between child elements */
+    padding: 16,
+    backgroundColor: '#FFFFFF',
+  },
+});`;
+      document.getElementById('flexGeneratedCode').innerText = generatedCode;
+    }
+
+    renderFlexStage();
+
+    // GAMIFIED KNOWLEDGE QUIZ LOGIC
+    const quizExplanations = {
+      1: {
+        correct: "✅ Correct! In React Native, there is no browser DOM. Any raw string placed outside a <Text> component causes a fatal runtime crash.",
+        wrong: "❌ Incorrect. Unlike HTML where <div>Text</div> is valid, React Native will CRASH if text is not inside an explicit <Text> component."
+      },
+      2: {
+        correct: "✅ Correct! Props are strictly immutable in React. The child receives data read-only; only the parent component holding state can update it via setter functions.",
+        wrong: "❌ Incorrect. Mutating props directly breaks React's unidirectional data flow and causes subtle reconciliation bugs."
+      },
+      3: {
+        correct: "✅ Correct! React Native defaults to flexDirection: 'column' (matching Android LinearLayout orientation='vertical'). Web CSS defaults to 'row'.",
+        wrong: "❌ Incorrect. React Native's default flexDirection is 'column' (vertical), not 'row'."
+      },
+      4: {
+        correct: "✅ Correct! React uses declarative state. Calling setCount schedules a re-render where the UI updates automatically without manual DOM manipulation.",
+        wrong: "❌ Incorrect. React does not use document.getElementById or manual canvas repainting; it uses declarative state hooks like useState."
+      }
+    };
+
+    let answeredQuizzes = {};
+
+    function checkQuiz(qNum, optIdx, isCorrect) {
+      const card = document.getElementById(`qCard${qNum}`);
+      const options = card.querySelectorAll('.quiz-opt');
+      const feedback = document.getElementById(`qFeed${qNum}`);
+
+      options.forEach(opt => opt.classList.add('disabled'));
+
+      if (isCorrect) {
+        options[optIdx].classList.add('correct');
+        feedback.className = 'quiz-feedback show-correct';
+        feedback.innerText = quizExplanations[qNum].correct;
+        answeredQuizzes[qNum] = true;
+      } else {
+        options[optIdx].classList.add('incorrect');
+        feedback.className = 'quiz-feedback show-wrong';
+        feedback.innerText = quizExplanations[qNum].wrong;
+        answeredQuizzes[qNum] = false;
+      }
+
+      updateQuizScore();
+    }
+
+    function updateQuizScore() {
+      const totalAnswered = Object.keys(answeredQuizzes).length;
+      const correctCount = Object.values(answeredQuizzes).filter(Boolean).length;
+      
+      const badge = document.getElementById('quizScoreBadge');
+      const text = document.getElementById('quizScoreText');
+      
+      badge.innerText = `${correctCount} / 4 Correct`;
+
+      if (correctCount === 4) {
+        badge.style.background = '#DCFCE7';
+        badge.style.color = '#15803D';
+        text.innerText = '🎉 Outstanding! 100% Concept Mastery. You are fully prepared to build the lab!';
+      } else {
+        text.innerText = `You have answered ${totalAnswered} of 4 concept questions (${correctCount} correct).`;
+      }
+    }
+
+    // PRE-SUBMISSION CODE VALIDATOR LOGIC
+    let currentVTab = 'App.tsx';
+
+    const sampleCodes = {
+      'App.tsx': `import React, { useState } from 'react';
+import { StyleSheet, Text, View, SafeAreaView, ScrollView } from 'react-native';
+import { StudentProfile } from './src/types/student';
+import { Header } from './src/components/Header';
+import { StudentCard } from './src/components/StudentCard';
+import { ScanCounter } from './src/components/ScanCounter';
+
+const initialStudent: StudentProfile = {
+  name: 'Juan Carlos D. Dela Cruz',
+  idNumber: '2024-008492-MT',
+  program: 'BS in Information Technology (BSIT)',
+  yearLevel: '3rd Year — Section A',
+  avatarUrl: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=200',
+  campus: 'Main Campus (Guang-guang, Mati City)',
+};
+
+export default function App() {
+  const [student, setStudent] = useState<StudentProfile>(initialStudent);
+  const [isActive, setIsActive] = useState<boolean>(true);
+  const [gateScans, setGateScans] = useState<number>(3);
+
+  const handleScan = () => setGateScans(prev => prev + 1);
+  const handleReset = () => setGateScans(0);
+  const togglePassStatus = () => setIsActive(prev => !prev);
+
+  return (
+    <SafeAreaView style={styles.safeArea}>
+      <ScrollView contentContainerStyle={styles.container}>
+        <Header />
+        <StudentCard student={student} isActive={isActive} />
+        <ScanCounter count={gateScans} onScan={handleScan} onReset={handleReset} />
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
+
+const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#F8FAFC',
+  },
+  container: {
+    padding: 16,
+    gap: 16,
+  },
+});`,
+      'StudentCard.tsx': `import React from 'react';
+import { StyleSheet, Text, View, Image } from 'react-native';
+import { StudentProfile } from '../types/student';
+import { StatusBadge } from './StatusBadge';
+
+interface StudentCardProps {
+  student: StudentProfile;
+  isActive: boolean;
+}
+
+export const StudentCard: React.FC<StudentCardProps> = ({ student, isActive }) => {
+  return (
+    <View style={styles.card}>
+      <View style={styles.topRow}>
+        <Image source={{ uri: student.avatarUrl }} style={styles.avatar} />
+        <View style={styles.details}>
+          <Text style={styles.name}>{student.name}</Text>
+          <Text style={styles.idNumber}>{student.idNumber}</Text>
+          <Text style={styles.program}>{student.program}</Text>
+          <Text style={styles.yearLevel}>{student.yearLevel}</Text>
+        </View>
+      </View>
+      <StatusBadge isActive={isActive} />
+      <Text style={styles.campus}>Campus: {student.campus}</Text>
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  card: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 14,
+    padding: 16,
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
+  },
+  topRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 14,
+  },
+  avatar: {
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+  },
+  details: {
+    flex: 1,
+  },
+  name: {
+    fontSize: 15,
+    fontWeight: '800',
+  },
+  idNumber: {
+    fontFamily: 'monospace',
+    fontSize: 12,
+    color: '#00758F',
+  },
+  program: {
+    fontSize: 12,
+    color: '#475569',
+  },
+  yearLevel: {
+    fontSize: 11,
+    color: '#64748B',
+  },
+  campus: {
+    fontSize: 11,
+    color: '#64748B',
+    marginTop: 6,
+  }
+});`,
+      'ScanCounter.tsx': `import React from 'react';
+import { StyleSheet, Text, View, Pressable } from 'react-native';
+
+interface ScanCounterProps {
+  count: number;
+  onScan: () => void;
+  onReset: () => void;
+}
+
+export const ScanCounter: React.FC<ScanCounterProps> = ({ count, onScan, onReset }) => (
+  <View style={styles.container}>
+    <Text style={styles.title}>Campus Gate Verification Log</Text>
+    <View style={styles.counterDisplay}>
+      <Text style={styles.label}>Today's Gate Entries:</Text>
+      <Text style={styles.value}>{count}</Text>
+    </View>
+    <View style={styles.btnRow}>
+      <Pressable style={styles.btnPrimary} onPress={onScan}>
+        <Text style={styles.btnText}>+1 Scan at Gate</Text>
+      </Pressable>
+      <Pressable style={styles.btnSecondary} onPress={onReset}>
+        <Text style={styles.btnSecText}>Reset Scans</Text>
+      </Pressable>
+    </View>
+  </View>
+);
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 12,
+    padding: 16,
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
+  },
+  title: {
+    fontSize: 13,
+    fontWeight: '800',
+    marginBottom: 10,
+  },
+  counterDisplay: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 10,
+    backgroundColor: '#F8FAFC',
+    borderRadius: 8,
+  },
+  label: {
+    fontSize: 12,
+    fontWeight: '600',
+  },
+  value: {
+    fontSize: 20,
+    fontWeight: '800',
+    color: '#00758F',
+  },
+  btnRow: {
+    flexDirection: 'row',
+    gap: 10,
+    marginTop: 12,
+  },
+  btnPrimary: {
+    flex: 1,
+    backgroundColor: '#00758F',
+    padding: 10,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  btnSecondary: {
+    flex: 1,
+    backgroundColor: '#E2E8F0',
+    padding: 10,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  btnText: {
+    color: '#FFFFFF',
+    fontWeight: '700',
+  },
+  btnSecText: {
+    color: '#334155',
+    fontWeight: '700',
+  }
+});`
+    };
+
+    function switchVTab(tabName) {
+      currentVTab = tabName;
+      document.querySelectorAll('.v-tab').forEach(t => t.classList.remove('active'));
+      if (tabName === 'App.tsx') document.getElementById('vTabApp').classList.add('active');
+      if (tabName === 'StudentCard.tsx') document.getElementById('vTabCard').classList.add('active');
+      if (tabName === 'ScanCounter.tsx') document.getElementById('vTabCounter').classList.add('active');
+    }
+
+    function loadReferenceCodeIntoValidator() {
+      document.getElementById('validatorCodeInput').value = sampleCodes[currentVTab] || '';
+      runCodeValidation();
+    }
+
+    function clearValidator() {
+      document.getElementById('validatorCodeInput').value = '';
+      document.getElementById('validatorResults').innerHTML = `
+        <div class="validator-empty-state">
+          <span>Paste your code above and click <strong>"Run Pre-Submission Diagnostic"</strong> to audit compliance with the 100-point rubric.</span>
+        </div>
+      `;
+    }
+
+    function runCodeValidation() {
+      const code = document.getElementById('validatorCodeInput').value.trim();
+      const resultsContainer = document.getElementById('validatorResults');
+
+      if (!code) {
+        resultsContainer.innerHTML = `
+          <div class="validator-empty-state" style="color: #EF4444;">
+            ⚠️ Please paste your component code first before running diagnostics.
+          </div>
+        `;
+        return;
+      }
+
+      let checks = [];
+      let score = 100;
+
+      // 1. Web HTML Tag Check
+      const hasWebTags = /<(div|span|p|button|h1|h2|h3|img|ul|li)\b/i.test(code);
+      if (hasWebTags) {
+        score -= 25;
+        checks.push({
+          pass: false,
+          title: "Invalid HTML Tags Detected",
+          desc: "Detected web browser tags (<div>, <p>, or <button>). React Native requires native primitives: <View>, <Text>, <Image>, <Pressable>."
+        });
+      } else {
+        checks.push({
+          pass: true,
+          title: "Native UI Primitives Verified",
+          desc: "Clean usage of cross-platform primitives (<View>, <Text>, <Image>, <Pressable>). No illegal DOM tags."
+        });
+      }
+
+      // 2. StyleSheet.create Check
+      const hasStyleSheet = /StyleSheet\.create\s*\(/i.test(code);
+      if (!hasStyleSheet) {
+        score -= 15;
+        checks.push({
+          pass: false,
+          title: "Missing StyleSheet.create()",
+          desc: "StyleSheet.create() was not found. Using raw inline style objects causes redundant garbage collection on every re-render."
+        });
+      } else {
+        checks.push({
+          pass: true,
+          title: "Optimized StyleSheet.create()",
+          desc: "Styles are declared outside the render tree using StyleSheet.create() for native performance."
+        });
+      }
+
+      // 3. TypeScript Interfaces Check
+      const hasInterface = /(interface\s+\w+|type\s+\w+\s*=)/i.test(code);
+      if (!hasInterface && currentVTab !== 'App.tsx') {
+        score -= 15;
+        checks.push({
+          pass: false,
+          title: "Missing TypeScript Props Contract",
+          desc: "No interface or type definition found. Component props must be strictly typed (e.g., interface StudentCardProps)."
+        });
+      } else {
+        checks.push({
+          pass: true,
+          title: "Strict TypeScript Contract",
+          desc: "Component contracts or data structures are explicitly typed."
+        });
+      }
+
+      // 4. State Hooks Check (for App.tsx)
+      if (currentVTab === 'App.tsx') {
+        const hasUseState = /useState\s*(<.*>)?\s*\(/i.test(code);
+        if (!hasUseState) {
+          score -= 20;
+          checks.push({
+            pass: false,
+            title: "Missing useState Hook",
+            desc: "App.tsx must maintain reactive state for gate entries (gateScans) or pass status (isActive)."
+          });
+        } else {
+          checks.push({
+            pass: true,
+            title: "Reactive State Management Verified",
+            desc: "useState hook correctly holds screen state and triggers reactive updates."
+          });
+        }
+
+        const hasFunctionalUpdate = /set\w+\s*\(\s*(prev|c)\s*=>/i.test(code);
+        if (hasFunctionalUpdate) {
+          checks.push({
+            pass: true,
+            title: "Functional State Updaters Detected",
+            desc: "Functional updater pattern (prev => prev + 1) used for safe concurrency during rapid button taps."
+          });
+        }
+      }
+
+      // 5. Bare Unwrapped Text Check
+      const hasBareText = /<View[^>]*>\s*([A-Za-z0-9]+)\s*<\/View>/i.test(code);
+      if (hasBareText) {
+        score -= 20;
+        checks.push({
+          pass: false,
+          title: "Raw Text Outside <Text> Tag",
+          desc: "Detected raw text string directly inside a <View>. This causes a runtime crash on mobile devices."
+        });
+      }
+
+      let statusBadgeClass = 'audit-pass';
+      let statusLabel = 'Exemplary — 100% Submission Ready 🚀';
+      if (score < 80) {
+        statusBadgeClass = 'audit-warn';
+        statusLabel = 'Satisfactory — Needs Minor Fixes ⚠️';
+      }
+      if (score < 60) {
+        statusBadgeClass = 'audit-fail';
+        statusLabel = 'Action Required — Potential Errors ❌';
+      }
+
+      let itemsHtml = checks.map(c => `
+        <div class="audit-item" style="border-left: 3px solid ${c.pass ? '#10B981' : '#EF4444'};">
+          <span class="audit-icon">${c.pass ? '✅' : '❌'}</span>
+          <div>
+            <strong style="color: ${c.pass ? 'var(--text)' : '#DC2626'};">${c.title}</strong>
+            <div style="font-size: 11.5px; color: var(--text-muted); margin-top: 2px;">${c.desc}</div>
+          </div>
+        </div>
+      `).join('');
+
+      resultsContainer.innerHTML = `
+        <div class="audit-header">
+          <div>
+            <span style="font-size: 11px; font-weight: 800; color: var(--text-muted); text-transform: uppercase;">Diagnostic Result for ${currentVTab}</span>
+            <div style="font-size: 14px; font-weight: 800; color: var(--text);">${statusLabel}</div>
+          </div>
+          <div class="audit-score-pill ${statusBadgeClass}">Rubric Score: ${score} / 100</div>
+        </div>
+        <div>${itemsHtml}</div>
+      `;
+    }
+
+    // FILE EXPLORER DATABASE
+    const fileData = {
+      'app-json': {
+        type: 'Expo Configuration',
+        path: './app.json (Project Root)',
+        title: 'app.json — Mobile Application Manifest',
+        desc: 'The global configuration file for Expo. It configures the native iOS & Android manifests without touching Xcode or Android Studio (package name, orientation, splash screen, icons).',
+        settings: [
+          '<strong>name</strong>: The human-readable name displayed on the user\'s phone home screen.',
+          '<strong>slug</strong>: URL-friendly identifier used for publishing to Expo or app stores.',
+          '<strong>icon & splash</strong>: Paths to the 1024x1024 app icon and launch splash images.',
+          '<strong>orientation</strong>: Lock the app to "portrait" or allow "default" (auto-rotation).'
+        ],
+        code: `{
+  "expo": {
+    "name": "dorsu-campus-pass",
+    "slug": "dorsu-campus-pass",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#00758F"
+    }
+  }
+}`
+      },
+      'package-json': {
+        type: 'NPM Package Manifest',
+        path: './package.json (Project Root)',
+        title: 'package.json — Dependencies & Scripts',
+        desc: 'Defines all installed node packages, React/Expo SDK version constraints, and executable terminal CLI scripts (like `npm run web` or `npx expo start`).',
+        settings: [
+          '<strong>scripts</strong>: Shortcuts for launching Expo (`start`, `android`, `ios`, `web`).',
+          '<strong>dependencies</strong>: Core libraries: `expo`, `react`, `react-native`, `react-dom`, `react-native-web`.',
+          '<strong>devDependencies</strong>: Development-only packages like `typescript` and `@types/react`.'
+        ],
+        code: `{
+  "name": "dorsu-campus-pass",
+  "version": "1.0.0",
+  "main": "index.ts",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "web": "expo start --web"
+  },
+  "dependencies": {
+    "expo": "~57.0.23",
+    "react": "19.2.3",
+    "react-native": "0.86.3",
+    "react-native-web": "^0.21.2"
+  }
+}`
+      },
+      'tsconfig': {
+        type: 'TypeScript Config',
+        path: './tsconfig.json (Project Root)',
+        title: 'tsconfig.json — TypeScript Compiler Settings',
+        desc: 'Tells the TypeScript compiler how to type-check your code, enabling strict mode and JSX translation for React Native.',
+        settings: [
+          '<strong>extends: "expo/tsconfig.base"</strong>: Automatically inherits optimal Expo TypeScript rules.',
+          '<strong>compilerOptions.strict: true</strong>: Enforces strict type-safety, catching null and undefined errors before runtime.'
+        ],
+        code: `{
+  "extends": "expo/tsconfig.base",
+  "compilerOptions": {
+    "strict": true
+  }
+}`
+      },
+      'gitignore': {
+        type: 'Git Barrier',
+        path: './.gitignore (Project Root)',
+        title: '.gitignore — Version Control Barrier',
+        desc: 'Prevents heavy temporary files and local artifacts from being uploaded to GitHub.',
+        settings: [
+          '<strong>node_modules/</strong>: Never commit external dependencies (run `npm install` instead).',
+          '<strong>.expo/</strong>: Temporary bundler cache generated by Metro.',
+          '<strong>dist/</strong>: Production bundle build outputs.'
+        ],
+        code: `node_modules/
+.expo/
+dist/
+npm-debug.*
+*.jks
+*.p8
+*.p12`
+      },
+      'index-ts': {
+        type: 'App Bootstrap',
+        path: './index.ts (Project Root)',
+        title: 'index.ts — Native App Entrypoint',
+        desc: 'The very first file executed by the JavaScript runtime. It registers the root React component with the native iOS/Android bridge using `registerRootComponent(App)`.',
+        settings: [
+          '<strong>registerRootComponent(App)</strong>: Ensures your app boots properly whether run on physical Expo Go, Android Emulator, or Web browser.'
+        ],
+        code: `import { registerRootComponent } from 'expo';
+import App from './App';
+
+// Binds root component to native AppRegistry
+registerRootComponent(App);`
+      },
+      'app-tsx': {
+        type: 'Root Screen Component',
+        path: './App.tsx (Project Root)',
+        title: 'App.tsx — Main Application Screen & State Container',
+        desc: 'The master container component. It holds top-level state (e.g., `gateScans`, `isActive`), handles user events, and composes all child components inside a `SafeAreaView`.',
+        settings: [
+          '<strong>useState</strong>: Manages real-time gate entry scans and administrative pass suspension state.',
+          '<strong>Component Hierarchy</strong>: Assembles `<Header />`, `<StudentCard />`, and `<ScanCounter />`.'
+        ],
+        code: `export default function App() {
+  const [gateScans, setGateScans] = useState<number>(3);
+  const [isActive, setIsActive] = useState<boolean>(true);
+
+  return (
+    <SafeAreaView style={styles.safeArea}>
+      <Header />
+      <StudentCard student={student} isActive={isActive} />
+      <ScanCounter count={gateScans} onScan={() => setGateScans(c => c + 1)} />
+    </SafeAreaView>
+  );
+}`
+      },
+      'types': {
+        type: 'TypeScript Types',
+        path: './src/types/student.ts',
+        title: 'src/types/student.ts — Data Contracts & Props Interfaces',
+        desc: 'Contains strong TypeScript contracts. Eliminates bugs by defining exactly what fields a student profile must possess (`name`, `idNumber`, `program`, `avatarUrl`).',
+        settings: [
+          '<strong>StudentProfile</strong>: Data interface passed as props into `<StudentCard />`.',
+          '<strong>ScanCounterProps</strong>: Callback contract for event handlers (`onScan`, `onReset`).'
+        ],
+        code: `export interface StudentProfile {
+  name: string;
+  idNumber: string;
+  program: string;
+  yearLevel: string;
+  avatarUrl: string;
+  campus: string;
+}
+
+export interface StatusBadgeProps {
+  isActive: boolean;
+}`
+      },
+      'components': {
+        type: 'Component Modules',
+        path: './src/components/ (Directory)',
+        title: 'src/components/ — Modular UI Building Blocks',
+        desc: 'Contains decoupled, reusable components following single-responsibility principles.',
+        settings: [
+          '<strong>Header.tsx</strong>: Institutional header banner.',
+          '<strong>StudentCard.tsx</strong>: Visual ID card layout receiving student props.',
+          '<strong>StatusBadge.tsx</strong>: Dynamic badge pill with conditional green/red styling.',
+          '<strong>ScanCounter.tsx</strong>: Real-time scan logger with interactive touch buttons.'
+        ],
+        code: `src/components/
+├── Header.tsx        // Institutional banner
+├── StatusBadge.tsx   // Dynamic conditional pill
+├── StudentCard.tsx   // ID card layout
+└── ScanCounter.tsx   // Interactive gate scan logger`
+      },
+      'node-modules': {
+        type: 'External Packages',
+        path: './node_modules/ (Directory)',
+        title: 'node_modules/ — Installed Dependencies',
+        desc: 'Contains hundreds of third-party libraries installed by `npm install`. This directory is generated automatically and should NEVER be manually edited or committed to Git.',
+        settings: [
+          '<strong>Regenerable</strong>: If deleted, simply run `npm install` to restore all packages.'
+        ],
+        code: `// Automatically generated folder
+// Contains react, react-native, expo, typescript libraries
+// Total size: ~200MB (Excluded in .gitignore)`
+      }
+    };
+
+    function showFileDetail(key) {
+      document.querySelectorAll('.tree-item').forEach(el => el.classList.remove('active'));
+      const targetItem = Array.from(document.querySelectorAll('.tree-item')).find(el => el.getAttribute('onclick').includes(key));
+      if (targetItem) targetItem.classList.add('active');
+
+      const data = fileData[key];
+      if (!data) return;
+
+      const container = document.getElementById('fileDetailCard');
+      let settingsHtml = '';
+      if (data.settings && data.settings.length > 0) {
+        settingsHtml = `
+          <div class="detail-card-section-title">Key Configuration Attributes:</div>
+          <ul style="margin-left: 18px; margin-bottom: 14px; font-size: 13px;">
+            ${data.settings.map(s => `<li style="margin-bottom: 4px;">${s}</li>`).join('')}
+          </ul>
+        `;
+      }
+
+      container.innerHTML = `
+        <div class="detail-badge-row">
+          <span class="detail-file-type">${data.type}</span>
+          <span class="detail-file-path">${data.path}</span>
+        </div>
+        <h3 class="detail-title">${data.title}</h3>
+        <p class="detail-desc">${data.desc}</p>
+        ${settingsHtml}
+        <div class="detail-card-section-title">Code / Configuration Preview:</div>
+        <div class="code-container" style="margin: 6px 0 0;">
+          <div class="code-header">
+            <span class="code-lang">${data.path}</span>
+            <button class="btn-copy" onclick="copyCode(this)">📋 Copy</button>
+          </div>
+          <pre><code>${escapeHtml(data.code)}</code></pre>
+        </div>
+      `;
+    }
+
+    function escapeHtml(str) {
+      return str
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    showFileDetail('app-json');
+
+    // SCROLL-SPY
+    const spySections = document.querySelectorAll('section[id]');
+    const spyLinks = document.querySelectorAll('.nav-link');
+
+    function updateActiveNavOnScroll() {
+      const scrollPosition = window.scrollY + 140;
+      let activeSectionId = '';
+
+      spySections.forEach((section) => {
+        const top = section.offsetTop;
+        const height = section.offsetHeight;
+        if (scrollPosition >= top && scrollPosition < top + height) {
+          activeSectionId = section.getAttribute('id');
+        }
+      });
+
+      const isBottom = (window.innerHeight + window.scrollY) >= (document.documentElement.scrollHeight - 60);
+      if (isBottom && spySections.length > 0) {
+        activeSectionId = spySections[spySections.length - 1].getAttribute('id');
+      }
+
+      if (activeSectionId) {
+        spyLinks.forEach((link) => {
+          const href = link.getAttribute('href');
+          if (href === `#${activeSectionId}`) {
+            link.classList.add('active');
+            link.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+          } else {
+            link.classList.remove('active');
+          }
+        });
+      }
+    }
+
+    window.addEventListener('scroll', updateActiveNavOnScroll, { passive: true });
+    window.addEventListener('resize', updateActiveNavOnScroll, { passive: true });
+    window.addEventListener('load', updateActiveNavOnScroll);
+    updateActiveNavOnScroll();
+
+    spyLinks.forEach((link) => {
+      link.addEventListener('click', function () {
+        spyLinks.forEach((l) => l.classList.remove('active'));
+        this.classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>
